@@ -6,18 +6,18 @@
 void Ex_1p2(){
 
   //load TFiles
-  TFile* fDY = new TFile("ljmet_DY.root");
-  TFile* fWZ = new TFile("ljmet_WZ.root");
-  TFile* fWJets = new TFile("ljmet_WJets.root");
-  TFile* fTT = new TFile("ljmet_TT.root");
-  TFile* fTTZ = new TFile("ljmet_TTZ.root");
+  TFile* fDY = new TFile("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
+  TFile* fWZ = new TFile("/uscms_data/d3/clint/public/ljmet_tree_WZ.root");
+  TFile* fWJets = new TFile("/uscms_data/d3/clint/public/ljmet_tree_WJets.root");
+  TFile* fTT = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT.root");
+  TFile* fTTZ = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TTZ.root");
 
   //load the TTrees
-  TTree* tDY = fDY->Get("ljmet_tree");
-  TTree* tWZ = fWZ->Get("ljmet_tree");
-  TTree* tWJets = fWJets->Get("ljmet_tree");
-  TTree* tTT = fTT->Get("ljmet_tree");
-  TTree* tTTZ = fTTZ->Get("ljmet_tree");
+  TTree* tDY = fDY->Get("ljmet");
+  TTree* tWZ = fWZ->Get("ljmet");
+  TTree* tWJets = fWJets->Get("ljmet");
+  TTree* tTT = fTT->Get("ljmet");
+  TTree* tTTZ = fTTZ->Get("ljmet");
 
   //define our taget luminosity - we are picking 5 fb^{-1} to correspond to roughly half-way through the 2015 run
   float targetlumi = 5.0;
@@ -48,11 +48,11 @@ void Ex_1p2(){
 
   //To start, look up the cross sections for the various samples in MCFM and fill them out below:
 
-  float xsecDY = ;
-  float xsecWZ = ;
-  float xsecWJets = ;
-  float xsecTT = ;
-  float xsecTTZ = ;
+  float xsecDY = 1.0;
+  float xsecWZ = 1.0;
+  float xsecWJets = 1.0;
+  float xsecTT = 1.0;
+  float xsecTTZ = 1.0;
 
   //Here some math is done for you :)
 
@@ -64,11 +64,11 @@ void Ex_1p2(){
 
   //Now that we have the weights we can find out how many events passed out selection:
 
-  int nSelDY = tDY->Draw("","76 < elDiMass < 106 ");
-  int nSelWZ = tWZ->Draw("","76 < elDiMass < 106 ");
-  int nSelWJets = tWJets->Draw("","76 < elDiMass < 106 ");
-  int nSelTT = tTT->Draw("","76 < elDiMass < 106 ");
-  int nSelTTZ = tTTZ->Draw("","76 < elDiMass < 106 ");
+  int nSelDY = tDY->Draw("","(76 < diElMass_DileptonCalc) && ( diElMass_DileptonCalc < 106 )");
+  int nSelWZ = tWZ->Draw("","(76 < diElMass_DileptonCalc) && (diElMass_DileptonCalc < 106 )");
+  int nSelWJets = tWJets->Draw("","(76 < diElMass_DileptonCalc) && (diElMass_DileptonCalc < 106 )");
+  int nSelTT = tTT->Draw("","(76 < diElMass_DileptonCalc) && (diElMass_DileptonCalc < 106 )");
+  int nSelTTZ = tTTZ->Draw("","(76 < diElMass_DileptonCalc) && (diElMass_DileptonCalc < 106 )");
 
   //now weight them and print out the values
 
