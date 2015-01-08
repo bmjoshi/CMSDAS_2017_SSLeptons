@@ -47,8 +47,8 @@ void Ex_1p1(){
   //Now draw fake rate vs eta, pt
 
   //define cuts
-  string masscuts = "76 < diElMass_DileptonCalc < 111";
-  string SSmasscuts = "(76 < diElMass_DileptonCalc < 111) && (elCharge1_DileptonCalc == elCharge2_DileptonCalc)";
+  string masscuts = "(76 < diElMass_DileptonCalc) && (diElMass_DileptonCalc < 111)";
+  string SSmasscuts = "(76 < diElMass_DileptonCalc) && (diElMass_DileptonCalc < 111) && (elCharge1_DileptonCalc == elCharge2_DileptonCalc)";
 
   //first get histograms
   TH1F* ssEtaHist = new TH1F("ssEtaHist","#eta",30,-3,3);
