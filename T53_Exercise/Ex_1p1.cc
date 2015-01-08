@@ -7,7 +7,7 @@
 void Ex_1p1(){
 
   //load file and tree
-  TFile* f = new TFile("ljmet_tree_DY.root");
+  TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
   TTree* t = f->Get("ljmet");
 
   //Draw the mass histogram for all events
