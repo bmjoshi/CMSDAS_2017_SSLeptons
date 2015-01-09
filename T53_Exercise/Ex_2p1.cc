@@ -17,16 +17,35 @@ void Ex_2p1(){
   TH1F* masshist = new TH1F("masshist", "Dielectron Invariant Mass",100,0.,200.);
   int nEntries = tDY->GetEntries();
   vector<double> *diElMass = 0;
+  //kinematic variables
   vector<double> *elpts = 0;
   vector<double> *elEtas =0;
+  //variables for tracking cuts
   vector<double> *eleDeta =0;
   vector<double> *elDphi =0;
+  //variables for primary vtx cuts
+  vector<double> *elDZs = 0;
+  vector<double> *elD0s = 0;
+  // H over E
+  vector<double> *elHoverEs = 0;
+  //missing hits
+  vector<double> *elMHits = 0;
+  //ooemoop
+  vector<double> *elOoEmooPs = 0;
+  //charged isolation
+  vector<double> *elChIsos = 0;
 
   tDY->SetBranchAddress("diElMass_DileptonCalc", &diElMass);
   tDY->SetBranchAddress("elPt_DileptonCalc", &elpts);
   tDY->SetBranchAddress("elEta_DileptonCalc", &elEtas);
   tDY->SetBranchAddress("elDeta_DileptonCalc", &elDeta);
   tDY->SetBranchAddress("elDphi_DileptonCalc", &elDphi);
+  tDY->SetBranchAddress("elDZ_DileptonCalc", &elDZs);
+  tDY->SetBranchAddress("elD0_DileptonCalc", &elD0s);
+  tDY->SetBranchAddress("elHoE_DileptonCalc",&elD0s);
+  tDY->SetBranchAddress("elMHits_DileptonCalc",&elMHits);
+  tDY->SetBranchAddress("elOooemoop_DileptonCalc",&elOoEmooPs);
+  tDY->SetBranchAddress("elChIso_DileptonCalc",&elChIsos);
 
   //setup booleans for passing the various cuts and initialize to false:
   bool masscut = false; // 81 < M_ee <101
