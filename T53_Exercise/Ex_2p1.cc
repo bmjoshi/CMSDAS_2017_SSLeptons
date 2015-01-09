@@ -3,13 +3,17 @@
 #include "TTree.h"
 #include "TH1.h"
 #include <vector>
-//#include "TTreeReader.h"
-//#include "TTreeReaderValue.h"
 
 
 
 void Ex_2p1(){
 
+  /*
+    The first part of this script is just a lot of logistics: initializing variables, getting information from the ttree, etc. To complete the exercise you don't need to understand all of it,
+    but please feel free to use it as a reference for how to get information from a ttree and loop over all the entries.
+   */
+
+  //load the files
   TFile* fDY = new TFile("ljmet_tree_DY_v2.root");
   TTree* tDY = fDY->Get("ljmet");
   //  TTreeReader myReader("ljmet", f);
@@ -137,6 +141,13 @@ void Ex_2p1(){
 	//check delta phi between track and supercluster
 	if(fabs(elDphi->at(0)) < 0.0936) elDPhiLoosecut1 = true;
 	if(fabs(elDphi->at(0)) < 0.031) elDPhiTightcut1 = true;
+	//check sigmaIetaIeta
+	if(elSigmaIetaIetas->at(0) < 0.0123) elSigmaIetaIetaLoosecut1 = true;
+	if(elSigmaIetaIetas->at(0) < 0.0106) elSigmaIetaIetaTightcut1 = true;
+	//check H over E
+	if(elHoverEs->at(0) < 0.141) elHELoosecut1 = true;
+	if(elHoverEs->at(0) < 0.0532) elHETightcut1 = true;
+	
       }
       else{
 	//check delta Eta between track and supercluster
@@ -145,6 +156,12 @@ void Ex_2p1(){
 	//check delta phi between track and supercluster
 	if(fabs(elDphi->at(0)) < 0.0642) elDPhiLoosecut1 = true;
 	if(fabs(elDphi->at(0)) < 0.0359) elDPhiTightcut1 = true;
+	//check sigmaIetaIeta
+	if(elSigmaIetaIetas->at(0) < 0.035) elSigmaIetaIetaLoosecut1 = true;
+	if(elSigmaIetaIetas->at(0) < 0.0305) elSigmaIetaIetaTightcut1 = true;
+	//check H over E
+	if(elHoverEs->at(0) < 0.1115) elHELoosecut1 = true;
+	if(elHoverEs->at(0) < 0.0835) elHETightcut1 = true;
       }
 
       //now for second lepton
@@ -155,7 +172,14 @@ void Ex_2p1(){
 	//check delta phi between track and supercluster
 	if(fabs(elDphi->at(1)) < 0.0936) elDPhiLoosecut2 = true;
 	if(fabs(elDphi->at(1)) < 0.031) elDPhiTightcut2 = true;
+	//check sigmaIetaIeta
+	if(elSigmaIetaIetas->at(1) < 0.0123) elSigmaIetaIetaLoosecut1 = true;
+	if(elSigmaIetaIetas->at(1) < 0.0106) elSigmaIetaIetaTightcut1 = true;
+	//check H over E
+	if(elHoverEs->at(1) < 0.141) elHELoosecut2 = true;
+	if(elHoverEs->at(1) < 0.0532) elHETightcut2 = true;
       }
+
       else{
 	//check delta Eta between track and supercluster	
 	if(fabs(elDeta->at(1)) < 0.0124) elDEtaLoosecut2 = true;
@@ -163,6 +187,12 @@ void Ex_2p1(){
 	//check delta phi between track and supercluster
 	if(fabs(elDphi->at(1)) < 0.0642) elDPhiLoosecut2 = true;
 	if(fabs(elDphi->at(1)) < 0.0359) elDPhiTightcut2 = true;
+	//check sigmaIetaIeta
+	if(elSigmaIetaIetas->at(1) < 0.035) elSigmaIetaIetaLoosecut2 = true;
+	if(elSigmaIetaIetas->at(1) < 0.0305) elSigmaIetaIetaTightcut2 = true;
+	//check H over E
+	if(elHoverEs->at(1) < 0.1115) elHELoosecut2 = true;
+	if(elHoverEs->at(1) < 0.0835) elHETightcut2 = true;
       }
 
   }
