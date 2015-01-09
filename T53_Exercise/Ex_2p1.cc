@@ -154,7 +154,11 @@ void Ex_2p1(){
 	//check H over E
 	if(elHoverEs->at(0) < 0.141) elHELoosecut1 = true;
 	if(elHoverEs->at(0) < 0.0532) elHETightcut1 = true;
-	
+	//check vertex cuts
+	if(fabs(elD0s->at(0)) < 0.0166) elD0Loosecut1 = true;
+	if(fabs(elD0s->at(0)) < 0.0126) elD0Tightcut1 = true;
+	if(fabs(elDZs->at(0)) < 0.54342) elDZLoosecut1 = true;
+	if(fabs(elDZs->at(0)) < 0.0116) elDZTightcut1 = true;
       }
       else{
 	//check delta Eta between track and supercluster
@@ -169,6 +173,11 @@ void Ex_2p1(){
 	//check H over E
 	if(elHoverEs->at(0) < 0.1115) elHELoosecut1 = true;
 	if(elHoverEs->at(0) < 0.0835) elHETightcut1 = true;
+	//check vertex cuts
+	if(fabs(elD0s->at(0)) < 0.098) elD0Loosecut1 = true;
+	if(fabs(elD0s->at(0)) < 0.0163) elD0Tightcut1 = true;
+	if(fabs(elDZs->at(0)) < 0.9187) elDZLoosecut1 = true;
+	if(fabs(elDZs->at(0)) < 0.5999) elDZTightcut1 = true;	
       }
 
       //now for second lepton
@@ -185,6 +194,11 @@ void Ex_2p1(){
 	//check H over E
 	if(elHoverEs->at(1) < 0.141) elHELoosecut2 = true;
 	if(elHoverEs->at(1) < 0.0532) elHETightcut2 = true;
+	//check vertex cuts
+	if(fabs(elD0s->at(1)) < 0.0166) elD0Loosecut2 = true;
+	if(fabs(elD0s->at(1)) < 0.0126) elD0Tightcut2 = true;
+	if(fabs(elDZs->at(1)) < 0.54342) elDZLoosecut2 = true;
+	if(fabs(elDZs->at(1)) < 0.0116) elDZTightcut2 = true;
       }
 
       else{
@@ -200,6 +214,11 @@ void Ex_2p1(){
 	//check H over E
 	if(elHoverEs->at(1) < 0.1115) elHELoosecut2 = true;
 	if(elHoverEs->at(1) < 0.0835) elHETightcut2 = true;
+	//check vertex cuts
+	if(fabs(elD0s->at(1)) < 0.098) elD0Loosecut2 = true;
+	if(fabs(elD0s->at(1)) < 0.0163) elD0Tightcut2 = true;
+	if(fabs(elDZs->at(0)) < 0.9187) elDZLoosecut2 = true;
+	if(fabs(elDZs->at(0)) < 0.5999) elDZTightcut2 = true;
       }
 
     }
