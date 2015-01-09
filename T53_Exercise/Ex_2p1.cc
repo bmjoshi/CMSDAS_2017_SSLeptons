@@ -33,8 +33,11 @@ void Ex_2p1(){
   //ooemoop
   vector<double> *elOoEmooPs = 0;
   //charged isolation
-  vector<double> *elChIsos = 0;
+  vector<double> *elRelIsos = 0;
+  //sigmaIetaIeta
+  vector<double>* elSigIetaIetas = 0;
 
+  //set branch addresses
   tDY->SetBranchAddress("diElMass_DileptonCalc", &diElMass);
   tDY->SetBranchAddress("elPt_DileptonCalc", &elpts);
   tDY->SetBranchAddress("elEta_DileptonCalc", &elEtas);
@@ -45,7 +48,8 @@ void Ex_2p1(){
   tDY->SetBranchAddress("elHoE_DileptonCalc",&elD0s);
   tDY->SetBranchAddress("elMHits_DileptonCalc",&elMHits);
   tDY->SetBranchAddress("elOooemoop_DileptonCalc",&elOoEmooPs);
-  tDY->SetBranchAddress("elChIso_DileptonCalc",&elChIsos);
+  tDY->SetBranchAddress("elRelIso_DileptonCalc",&elRelIsos);
+  tDY->SetBranchAddress("elSihih_DileptonCalc",&elSigIetIetas);
 
   //setup booleans for passing the various cuts and initialize to false:
   bool masscut = false; // 81 < M_ee <101
