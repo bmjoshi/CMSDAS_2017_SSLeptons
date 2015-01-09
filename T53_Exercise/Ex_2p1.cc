@@ -40,7 +40,7 @@ void Ex_2p1(){
   // H over E
   vector<double> *elHoverEs = 0;
   //missing hits
-  vector<double> *elMHits = 0;
+  vector<int> *elMHits = 0;
   //ooemoop
   vector<double> *elOoEmooPs = 0;
   //charged isolation
@@ -95,10 +95,10 @@ void Ex_2p1(){
   bool elDZTightcut1 = false;
   bool elDZTightcut2 = false;
   //ooEooP cuts
-  bool elooEooPLoosecut1 = false;
-  bool elooEooPLoosecut2 = false;
-  bool elooEooPTightcut1 = false;
-  bool elooEooPTightcut2 = false;
+  bool elooEmooPLoosecut1 = false;
+  bool elooEmooPLoosecut2 = false;
+  bool elooEmooPTightcut1 = false;
+  bool elooEmooPTightcut2 = false;
   //isolation cuts
   bool elPFIsoLoosecut1 = false;
   bool elPFIsoLoosecut2 = false;
@@ -159,6 +159,15 @@ void Ex_2p1(){
 	if(fabs(elD0s->at(0)) < 0.0126) elD0Tightcut1 = true;
 	if(fabs(elDZs->at(0)) < 0.54342) elDZLoosecut1 = true;
 	if(fabs(elDZs->at(0)) < 0.0116) elDZTightcut1 = true;
+	//ooEmooP cuts
+	if(fabs(elOoEmooPs->at(0)) < 0.1353) elooEmooPLoosecut1 = true;
+	if(fabs(elOoEmooPs->at(0)) < 0.0609) elooEmooPTightcut1 = true;
+	//pfIsoCuts
+	if(elRelIsos->at(0) < 0.24) elPFIsoLoosecut1 = true;
+	if(elRelIsos->at(0) < 0.1649) elPFIsoTightcut1 = true;
+	//missing hits cuts
+	if(elMHits->at(0) <= 1) elMissingHitsLoose1 = true;
+	if(elMHits->at(0) <= 1) elMissingHitsLoose1 = true;
       }
       else{
 	//check delta Eta between track and supercluster
@@ -177,7 +186,16 @@ void Ex_2p1(){
 	if(fabs(elD0s->at(0)) < 0.098) elD0Loosecut1 = true;
 	if(fabs(elD0s->at(0)) < 0.0163) elD0Tightcut1 = true;
 	if(fabs(elDZs->at(0)) < 0.9187) elDZLoosecut1 = true;
-	if(fabs(elDZs->at(0)) < 0.5999) elDZTightcut1 = true;	
+	if(fabs(elDZs->at(0)) < 0.5999) elDZTightcut1 = true;
+	//ooEmooP cuts
+	if(fabs(elOoEmooPs->at(0)) < 0.1443) elooEmooPLoosecut1 = true;
+	if(fabs(elOoEmooPs->at(0)) < 0.1126) elooEmooPTightcut1 = true;
+	//pfIsoCuts
+	if(elRelIsos->at(0) < 0.3529) elPFIsoLoosecut1 = true;
+	if(elRelIsos->at(0) < 0.2075) elPFIsoTightcut1 = true;
+	//missing hits cuts
+	if(elMHits->at(0) <= 1) elMissingHitsLoose1 = true;
+	if(elMHits->at(0) <= 1) elMissingHitsLoose1 = true;
       }
 
       //now for second lepton
@@ -199,6 +217,15 @@ void Ex_2p1(){
 	if(fabs(elD0s->at(1)) < 0.0126) elD0Tightcut2 = true;
 	if(fabs(elDZs->at(1)) < 0.54342) elDZLoosecut2 = true;
 	if(fabs(elDZs->at(1)) < 0.0116) elDZTightcut2 = true;
+	//ooEmooP cuts
+	if(fabs(elOoEmooPs->at(1)) < 0.1353) elooEmooPLoosecut2 = true;
+	if(fabs(elOoEmooPs->at(1)) < 0.0609) elooEmooPTightcut2 = true;
+	//pfIsoCuts
+	if(elRelIsos->at(1) < 0.24) elPFIsoLoosecut2 = true;
+	if(elRelIsos->at(1) < 0.1649) elPFIsoTightcut2 = true;
+	//missing hits cuts
+	if(elMHits->at(1) <= 1) elMissingHitsLoose2 = true;
+	if(elMHits->at(1) <= 1) elMissingHitsLoose2 = true;
       }
 
       else{
@@ -217,14 +244,23 @@ void Ex_2p1(){
 	//check vertex cuts
 	if(fabs(elD0s->at(1)) < 0.098) elD0Loosecut2 = true;
 	if(fabs(elD0s->at(1)) < 0.0163) elD0Tightcut2 = true;
-	if(fabs(elDZs->at(0)) < 0.9187) elDZLoosecut2 = true;
-	if(fabs(elDZs->at(0)) < 0.5999) elDZTightcut2 = true;
+	if(fabs(elDZs->at(1)) < 0.9187) elDZLoosecut2 = true;
+	if(fabs(elDZs->at(1)) < 0.5999) elDZTightcut2 = true;
+	//ooEmooP cuts
+	if(fabs(elOoEmooPs->at(1)) < 0.1443) elooEmooPLoosecut2 = true;
+	if(fabs(elOoEmooPs->at(1)) < 0.1126) elooEmooPTightcut2 = true;
+	//pfIsoCuts
+	if(elRelIsos->at(1) < 0.3529) elPFIsoLoosecut2 = true;
+	if(elRelIsos->at(1) < 0.2075) elPFIsoTightcut2 = true;
+	//missing hits cuts
+	if(elMHits->at(1) <= 1) elMissingHitsLoose2 = true;
+	if(elMHits->at(1) <= 1) elMissingHitsLoose2 = true;
       }
 
     }
 
-    //check to make sure there is at least one tight lepton
-    if( elTight1 && elTight2){
+    //check to make sure there is at least one tight lepton, but that the event passes the z mass window cut
+    if( (elTight1 || elTight2) && masscut ){
       //then fill denominator with other lepton if it's a loose one
       if(elTight1){
 	if(elLoose2){
