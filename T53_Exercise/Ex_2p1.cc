@@ -111,7 +111,7 @@ void Ex_2p1(){
   bool elLoose1 = false; //and of all loose cuts
   bool elTight1 = false; //and of all tight cuts
   bool elLoose2 = false; //and of all loose cuts
-  bool eltight2 = false; //and of all tight cuts
+  bool elTight2 = false; //and of all tight cuts
 
   for(int ient = 0; ient < nEntries; ient++){
     tDY->GetEntry(ient);
@@ -195,8 +195,39 @@ void Ex_2p1(){
 	if(elHoverEs->at(1) < 0.0835) elHETightcut2 = true;
       }
 
+    }
+
+    //check to make sure there is at least one tight lepton
+    if( elTight1 && elTight2){
+      //then fill denominator with other lepton if it's a loose one
+      if(elTight1){
+	if(elLoose2){
+	  denPtHist->Fill(elpts->at(1));
+	  denEtaHist->Fill(elEtas->at(1));
+
+	  if(elTight2){
+	    numPtHist->Fill(elpts->at(1));
+	    numEtaHist0>Fill(elEtas->at(1));
+	  }
+	}
+
+      }
+      else{
+	if(elLoose1){
+	  denPtHist->Fill(elpts->at(0));
+	  denEtaHist->Fill(elEtas->at(0));
+	  if(elTight1){
+	    numPtHist->Fill(elpts->at(0));
+	    numEtaHist->Fill(elEtas->at(0));
+	  }
+	}
+
+      }
+    }
+    //finish loop over entries
   }
-  masshist->Draw();
+
+  //masshist->Draw();
   //while (myReader.Next()){
   //std::cout<<"dEta is: "<<
 
