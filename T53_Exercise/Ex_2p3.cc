@@ -169,16 +169,23 @@ void Ex_2p3(){
 
   //event loop - plots to produce: HT distribution for all cuts except 
   for(int iel = 0; iel < nEntriesdata; iel++){
-
-
+    tdata->GetEntry(iel);
+    //    std::cout<<"in event loop"<<std::endl;
     //check dilepton cut
+    std::cout<<"n leptons is: "<<elpts_data->size()<<std::endl;
     if(elpts_data->size() < 2) continue;
+    std::cout<<"passed dilepton cut"<<std::endl;
     //z mass veto
-    if( (diElMass->at(0) > 76) || (diElMass->at(0) <116) ) continue;
+    if((diElMass_data->size()>0)){
+      if( (diElMass_data->at(0) > 76) || (diElMass_data->at(0) <116) ) continue;
+    }
+    std::cout<<"passed mass cut"<<std::endl;
     //check met req
     if( met_data < 100) continue;
+    std::cout<<"passed met cut"<<std::endl;
     //check lep1pt req
     if(elpts_data->at(0) < 80) continue;
+    std::cout<<"passed lep 1 pt"<<std::endl;
     //check subleading lep pt req
     if(elpts_data->at(1) < 30) continue;
     //require more than one jet
@@ -192,6 +199,7 @@ void Ex_2p3(){
     for(int ijet = 0; ijet<jetPts_data->size(); ijet++){
       HT+= fabs(jetPts_data->at(ijet));
     }
+    std::cout<<"HT: "<<HT<<std::endl;
     if( HT < 1400) continue;
     
     //check samesign lepton req
