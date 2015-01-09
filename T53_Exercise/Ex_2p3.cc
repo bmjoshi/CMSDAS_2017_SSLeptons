@@ -172,15 +172,15 @@ void Ex_2p3(){
 
 
     //check dilepton cut
-    if(elPts->size() < 2) continue;
+    if(elpts_data->size() < 2) continue;
     //z mass veto
     if( (diElMass->at(0) > 76) || (diElMass->at(0) <116) ) continue;
     //check met req
     if( met_data < 100) continue;
     //check lep1pt req
-    if(elPts_data->at(0) < 80) continue;
+    if(elpts_data->at(0) < 80) continue;
     //check subleading lep pt req
-    if(elPts_data->at(1) < 30) continue;
+    if(elpts_data->at(1) < 30) continue;
     //require more than one jet
     if(jetPts_data->size() < 2) continue;
     //check for high pt jet
