@@ -32,7 +32,7 @@ void Ex_2p1(){
   vector<double> *elpts = 0;
   vector<double> *elEtas =0;
   //variables for tracking cuts
-  vector<double> *eleDeta =0;
+  vector<double> *elDeta =0;
   vector<double> *elDphi =0;
   //variables for primary vtx cuts
   vector<double> *elDZs = 0;
@@ -46,7 +46,7 @@ void Ex_2p1(){
   //charged isolation
   vector<double> *elRelIsos = 0;
   //sigmaIetaIeta
-  vector<double>* elSigIetaIetas = 0;
+  vector<double>* elSigmaIetaIetas = 0;
 
   //set branch addresses
   tDY->SetBranchAddress("diElMass_DileptonCalc", &diElMass);
@@ -56,16 +56,16 @@ void Ex_2p1(){
   tDY->SetBranchAddress("elDphi_DileptonCalc", &elDphi);
   tDY->SetBranchAddress("elDZ_DileptonCalc", &elDZs);
   tDY->SetBranchAddress("elD0_DileptonCalc", &elD0s);
-  tDY->SetBranchAddress("elHoE_DileptonCalc",&elD0s);
+  tDY->SetBranchAddress("elHoE_DileptonCalc",&elHoverEs);
   tDY->SetBranchAddress("elMHits_DileptonCalc",&elMHits);
-  tDY->SetBranchAddress("elOooemoop_DileptonCalc",&elOoEmooPs);
+  tDY->SetBranchAddress("elOoemoop_DileptonCalc",&elOoEmooPs);
   tDY->SetBranchAddress("elRelIso_DileptonCalc",&elRelIsos);
-  tDY->SetBranchAddress("elSihih_DileptonCalc",&elSigIetIetas);
+  tDY->SetBranchAddress("elSihih_DileptonCalc",&elSigmaIetaIetas);
 
   //setup booleans for passing the various cuts and initialize to false:
   bool masscut = false; // 81 < M_ee <101
   bool elptcut1 = false; // >20
-  bool eptcut2 = false; // >20
+  bool elptcut2 = false; // >20
   //tracking cuts
   bool elDEtaLoosecut1 = false; // fabs() <0.181;
   bool elDEtaLoosecut2 = false; // fabs() <0.181;
@@ -84,7 +84,7 @@ void Ex_2p1(){
   bool elHELoosecut1 = false;
   bool elHELoosecut2 = false;
   bool elHETightcut1 = false;
-  bool elHETighcut2 = false;
+  bool elHETightcut2 = false;
   //primary vertex cuts
   bool elD0Loosecut1 = false;
   bool elD0Loosecut2 = false;
@@ -166,8 +166,8 @@ void Ex_2p1(){
 	if(elRelIsos->at(0) < 0.24) elPFIsoLoosecut1 = true;
 	if(elRelIsos->at(0) < 0.1649) elPFIsoTightcut1 = true;
 	//missing hits cuts
-	if(elMHits->at(0) <= 1) elMissingHitsLoose1 = true;
-	if(elMHits->at(0) <= 1) elMissingHitsLoose1 = true;
+	if(elMHits->at(0) <= 1) elMissingHitsLoosecut1 = true;
+	if(elMHits->at(0) <= 1) elMissingHitsTightcut1 = true;
       }
       else{
 	//check delta Eta between track and supercluster
@@ -194,8 +194,8 @@ void Ex_2p1(){
 	if(elRelIsos->at(0) < 0.3529) elPFIsoLoosecut1 = true;
 	if(elRelIsos->at(0) < 0.2075) elPFIsoTightcut1 = true;
 	//missing hits cuts
-	if(elMHits->at(0) <= 1) elMissingHitsLoose1 = true;
-	if(elMHits->at(0) <= 1) elMissingHitsLoose1 = true;
+	if(elMHits->at(0) <= 1) elMissingHitsLoosecut1 = true;
+	if(elMHits->at(0) <= 1) elMissingHitsTightcut1 = true;
       }
 
       //now for second lepton
@@ -224,8 +224,8 @@ void Ex_2p1(){
 	if(elRelIsos->at(1) < 0.24) elPFIsoLoosecut2 = true;
 	if(elRelIsos->at(1) < 0.1649) elPFIsoTightcut2 = true;
 	//missing hits cuts
-	if(elMHits->at(1) <= 1) elMissingHitsLoose2 = true;
-	if(elMHits->at(1) <= 1) elMissingHitsLoose2 = true;
+	if(elMHits->at(1) <= 1) elMissingHitsLoosecut2 = true;
+	if(elMHits->at(1) <= 1) elMissingHitsTightcut2 = true;
       }
 
       else{
@@ -253,8 +253,8 @@ void Ex_2p1(){
 	if(elRelIsos->at(1) < 0.3529) elPFIsoLoosecut2 = true;
 	if(elRelIsos->at(1) < 0.2075) elPFIsoTightcut2 = true;
 	//missing hits cuts
-	if(elMHits->at(1) <= 1) elMissingHitsLoose2 = true;
-	if(elMHits->at(1) <= 1) elMissingHitsLoose2 = true;
+	if(elMHits->at(1) <= 1) elMissingHitsLoosecut2 = true;
+	if(elMHits->at(1) <= 1) elMissingHitsTightcut2 = true;
       }
 
     }
@@ -290,8 +290,17 @@ void Ex_2p1(){
   }
 
   //masshist->Draw();
-  //while (myReader.Next()){
-  //std::cout<<"dEta is: "<<
+  
+  TGraphAsymmErrors* ptgraph = new TGraphAsymmErrors(numPtHist,denPtHist);
+  TGraphAsymmErrors* etagraph = new TGraphAsymmErrors(numEtaHist,denEtaHist);
+  
+  TCanvas c1;
+  ptgraph->Draw("apl");
+  c1.Print("PromptRate_v_pT.pdf");
+
+  TCanvas c2;
+  etagraph->Draw("apl");
+  c2.Print("PromptRate_v_Eta.pdf");
 
 
 
