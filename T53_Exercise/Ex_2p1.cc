@@ -17,8 +17,15 @@ void Ex_2p1(){
   TFile* fDY = new TFile("ljmet_tree_DY_v2.root");
   TTree* tDY = fDY->Get("ljmet");
   //  TTreeReader myReader("ljmet", f);
-  
+
+  //initialize need histograms
   TH1F* masshist = new TH1F("masshist", "Dielectron Invariant Mass",100,0.,200.);
+  TH1F* numPtHist = new TH1F("numPtHist","Lepton p_{T} - TIGHT ID",200,0.,400.);
+  TH1F* denPtHist = new TH1F("denPtHist","Lepton p_{T} - LOOSE ID",200,0.,400.);
+  TH1F* numEtaHist = new TH1F("numEtaHist","Lepton #eta - TIGHT ID",200,0.,400.);
+  TH1F* denEtaHist = new TH1F("denEtaHist","Lepton #eta - LOOSE ID",200,0.,400.);
+
+  
   int nEntries = tDY->GetEntries();
   vector<double> *diElMass = 0;
   //kinematic variables
