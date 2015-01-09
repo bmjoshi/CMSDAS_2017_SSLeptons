@@ -184,120 +184,120 @@ void Ex_2p3(){
     //loop for id
     //need to separate between barrel and endcap
     //first lepton
-    if(elEtas->at(0) <= 1.479){
+    if(elEtas_data->at(0) <= 1.479){
       //check delta Eta between track and supercluster
-      if(fabs(elDeta->at(0)) < 0.0181) elDEtaLoosecut1data = true;
-      if(fabs(elDeta->at(0)) < 0.0091) elDEtaTightcut1data = true;
+      if(fabs(elDeta_data->at(0)) < 0.0181) elDEtaLoosecut1data = true;
+      if(fabs(elDeta_data->at(0)) < 0.0091) elDEtaTightcut1data = true;
       //check delta phi between track and supercluster
-      if(fabs(elDphi->at(0)) < 0.0936) elDPhiLoosecut1data = true;
-      if(fabs(elDphi->at(0)) < 0.031) elDPhiTightcut1data = true;
+      if(fabs(elDphi_data->at(0)) < 0.0936) elDPhiLoosecut1data = true;
+      if(fabs(elDphi_data->at(0)) < 0.031) elDPhiTightcut1data = true;
       //check sigmaIetaIeta
-      if(elSigmaIetaIetas->at(0) < 0.0123) elSigmaIetaIetaLoosecut1data = true;
-      if(elSigmaIetaIetas->at(0) < 0.0106) elSigmaIetaIetaTightcut1data = true;
+      if(elSigmaIetaIetas_data->at(0) < 0.0123) elSigmaIetaIetaLoosecut1data = true;
+      if(elSigmaIetaIetas_data->at(0) < 0.0106) elSigmaIetaIetaTightcut1data = true;
       //check H over E
-      if(elHoverEs->at(0) < 0.141) elHELoosecut1data = true;
-      if(elHoverEs->at(0) < 0.0532) elHETightcut1data = true;
+      if(elHoverEs_data->at(0) < 0.141) elHELoosecut1data = true;
+      if(elHoverEs_data->at(0) < 0.0532) elHETightcut1data = true;
       //check vertex cuts
-      if(fabs(elD0s->at(0)) < 0.0166) elD0Loosecut1data = true;
-      if(fabs(elD0s->at(0)) < 0.0126) elD0Tightcut1data = true;
-      if(fabs(elDZs->at(0)) < 0.54342) elDZLoosecut1data = true;
-      if(fabs(elDZs->at(0)) < 0.0116) elDZTightcut1data = true;
+      if(fabs(elD0s_data->at(0)) < 0.0166) elD0Loosecut1data = true;
+      if(fabs(elD0s_data->at(0)) < 0.0126) elD0Tightcut1data = true;
+      if(fabs(elDZs_data->at(0)) < 0.54342) elDZLoosecut1data = true;
+      if(fabs(elDZs_data->at(0)) < 0.0116) elDZTightcut1data = true;
       //ooEmooP cuts
-      if(fabs(elOoEmooPs->at(0)) < 0.1353) elooEmooPLoosecut1data = true;
-      if(fabs(elOoEmooPs->at(0)) < 0.0609) elooEmooPTightcut1data = true;
+      if(fabs(elOoEmooPs_data->at(0)) < 0.1353) elooEmooPLoosecut1data = true;
+      if(fabs(elOoEmooPs_data->at(0)) < 0.0609) elooEmooPTightcut1data = true;
       //pfIsoCuts
-      if(elRelIsos->at(0) < 0.24) elPFIsoLoosecut1data = true;
-      if(elRelIsos->at(0) < 0.1649) elPFIsoTightcut1data = true;
+      if(elRelIsos_data->at(0) < 0.24) elPFIsoLoosecut1data = true;
+      if(elRelIsos_data->at(0) < 0.1649) elPFIsoTightcut1data = true;
       //missing hits cuts
-      if(elMHits->at(0) <= 1) elMissingHitsLoosecut1data = true;
-      if(elMHits->at(0) <= 1) elMissingHitsTightcut1data = true;
+      if(elMHits_data->at(0) <= 1) elMissingHitsLoosecut1data = true;
+      if(elMHits_data->at(0) <= 1) elMissingHitsTightcut1data = true;
     }
     else{
       //check delta Eta between track and supercluster
-      if(fabs(elDeta->at(0)) < 0.0124) elDEtaLoosecut1data = true;
-      if(fabs(elDeta->at(0)) < 0.0106) elDEtaTightcut1data = true;
+      if(fabs(elDeta_data->at(0)) < 0.0124) elDEtaLoosecut1data = true;
+      if(fabs(elDeta_data->at(0)) < 0.0106) elDEtaTightcut1data = true;
       //check delta phi between track and supercluster
-      if(fabs(elDphi->at(0)) < 0.0642) elDPhiLoosecut1data = true;
-      if(fabs(elDphi->at(0)) < 0.0359) elDPhiTightcut1data = true;
+      if(fabs(elDphi_data->at(0)) < 0.0642) elDPhiLoosecut1data = true;
+      if(fabs(elDphi_data->at(0)) < 0.0359) elDPhiTightcut1data = true;
       //check sigmaIetaIeta
-      if(elSigmaIetaIetas->at(0) < 0.035) elSigmaIetaIetaLoosecut1data = true;
-      if(elSigmaIetaIetas->at(0) < 0.0305) elSigmaIetaIetaTightcut1data = true;
+      if(elSigmaIetaIetas_data->at(0) < 0.035) elSigmaIetaIetaLoosecut1data = true;
+      if(elSigmaIetaIetas_data->at(0) < 0.0305) elSigmaIetaIetaTightcut1data = true;
       //check H over E
-      if(elHoverEs->at(0) < 0.1115) elHELoosecut1data = true;
-      if(elHoverEs->at(0) < 0.0835) elHETightcut1data = true;
+      if(elHoverEs_data->at(0) < 0.1115) elHELoosecut1data = true;
+      if(elHoverEs_data->at(0) < 0.0835) elHETightcut1data = true;
       //check vertex cuts
-      if(fabs(elD0s->at(0)) < 0.098) elD0Loosecut1data = true;
-      if(fabs(elD0s->at(0)) < 0.0163) elD0Tightcut1data = true;
-      if(fabs(elDZs->at(0)) < 0.9187) elDZLoosecut1data = true;
-      if(fabs(elDZs->at(0)) < 0.5999) elDZTightcut1data = true;
+      if(fabs(elD0s_data->at(0)) < 0.098) elD0Loosecut1data = true;
+      if(fabs(elD0s_data->at(0)) < 0.0163) elD0Tightcut1data = true;
+      if(fabs(elDZs_data->at(0)) < 0.9187) elDZLoosecut1data = true;
+      if(fabs(elDZs_data->at(0)) < 0.5999) elDZTightcut1data = true;
       //ooEmooP cuts
-      if(fabs(elOoEmooPs->at(0)) < 0.1443) elooEmooPLoosecut1data = true;
-      if(fabs(elOoEmooPs->at(0)) < 0.1126) elooEmooPTightcut1data = true;
+      if(fabs(elOoEmooPs_data->at(0)) < 0.1443) elooEmooPLoosecut1data = true;
+      if(fabs(elOoEmooPs_data->at(0)) < 0.1126) elooEmooPTightcut1data = true;
       //pfIsoCuts
-      if(elRelIsos->at(0) < 0.3529) elPFIsoLoosecut1data = true;
-      if(elRelIsos->at(0) < 0.2075) elPFIsoTightcut1data = true;
+      if(elRelIsos_data->at(0) < 0.3529) elPFIsoLoosecut1data = true;
+      if(elRelIsos_data->at(0) < 0.2075) elPFIsoTightcut1data = true;
       //missing hits cuts
-      if(elMHits->at(0) <= 1) elMissingHitsLoosecut1data = true;
-      if(elMHits->at(0) <= 1) elMissingHitsTightcut1data = true;
+      if(elMHits_data->at(0) <= 1) elMissingHitsLoosecut1data = true;
+      if(elMHits_data->at(0) <= 1) elMissingHitsTightcut1data = true;
     }
     
     //now for second lepton
-    if(elEtas->at(1)<=1.479){
+    if(elEtas_data->at(1)<=1.479){
       //check delta Eta between track and supercluster	
-      if(fabs(elDeta->at(1)) < 0.0181) elDEtaLoosecut2data = true;
-      if(fabs(elDeta->at(1)) < 0.0091) elDEtaTightcut2data = true;
+      if(fabs(elDeta_data->at(1)) < 0.0181) elDEtaLoosecut2data = true;
+      if(fabs(elDeta_data->at(1)) < 0.0091) elDEtaTightcut2data = true;
       //check delta phi between track and supercluster
-      if(fabs(elDphi->at(1)) < 0.0936) elDPhiLoosecut2data = true;
-      if(fabs(elDphi->at(1)) < 0.031) elDPhiTightcut2data = true;
+      if(fabs(elDphi_data->at(1)) < 0.0936) elDPhiLoosecut2data = true;
+      if(fabs(elDphi_data->at(1)) < 0.031) elDPhiTightcut2data = true;
       //check sigmaIetaIeta
-      if(elSigmaIetaIetas->at(1) < 0.0123) elSigmaIetaIetaLoosecut1data = true;
-      if(elSigmaIetaIetas->at(1) < 0.0106) elSigmaIetaIetaTightcut1data = true;
+      if(elSigmaIetaIetas_data->at(1) < 0.0123) elSigmaIetaIetaLoosecut1data = true;
+      if(elSigmaIetaIetas_data->at(1) < 0.0106) elSigmaIetaIetaTightcut1data = true;
       //check H over E
-      if(elHoverEs->at(1) < 0.141) elHELoosecut2data = true;
-      if(elHoverEs->at(1) < 0.0532) elHETightcut2data = true;
+      if(elHoverEs_data->at(1) < 0.141) elHELoosecut2data = true;
+      if(elHoverEs_data->at(1) < 0.0532) elHETightcut2data = true;
       //check vertex cuts
-      if(fabs(elD0s->at(1)) < 0.0166) elD0Loosecut2data = true;
-      if(fabs(elD0s->at(1)) < 0.0126) elD0Tightcut2data = true;
-      if(fabs(elDZs->at(1)) < 0.54342) elDZLoosecut2data = true;
-      if(fabs(elDZs->at(1)) < 0.0116) elDZTightcut2data = true;
+      if(fabs(elD0s_data->at(1)) < 0.0166) elD0Loosecut2data = true;
+      if(fabs(elD0s_data->at(1)) < 0.0126) elD0Tightcut2data = true;
+      if(fabs(elDZs_data->at(1)) < 0.54342) elDZLoosecut2data = true;
+      if(fabs(elDZs_data->at(1)) < 0.0116) elDZTightcut2data = true;
       //ooEmooP cuts
-      if(fabs(elOoEmooPs->at(1)) < 0.1353) elooEmooPLoosecut2data = true;
-      if(fabs(elOoEmooPs->at(1)) < 0.0609) elooEmooPTightcut2data = true;
+      if(fabs(elOoEmooPs_data->at(1)) < 0.1353) elooEmooPLoosecut2data = true;
+      if(fabs(elOoEmooPs_data->at(1)) < 0.0609) elooEmooPTightcut2data = true;
       //pfIsoCuts
-      if(elRelIsos->at(1) < 0.24) elPFIsoLoosecut2data = true;
-      if(elRelIsos->at(1) < 0.1649) elPFIsoTightcut2data = true;
+      if(elRelIsos_data->at(1) < 0.24) elPFIsoLoosecut2data = true;
+      if(elRelIsos_data->at(1) < 0.1649) elPFIsoTightcut2data = true;
       //missing hits cuts
-      if(elMHits->at(1) <= 1) elMissingHitsLoosecut2data = true;
-      if(elMHits->at(1) <= 1) elMissingHitsTightcut2data = true;
+      if(elMHits_data->at(1) <= 1) elMissingHitsLoosecut2data = true;
+      if(elMHits_data->at(1) <= 1) elMissingHitsTightcut2data = true;
     }
     
     else{
       //check delta Eta between track and supercluster	
-      if(fabs(elDeta->at(1)) < 0.0124) elDEtaLoosecut2data = true;
-      if(fabs(elDeta->at(1)) < 0.0106) elDEtaTightcut2data = true;
+      if(fabs(elDeta_data->at(1)) < 0.0124) elDEtaLoosecut2data = true;
+      if(fabs(elDeta_data->at(1)) < 0.0106) elDEtaTightcut2data = true;
       //check delta phi between track and supercluster
-      if(fabs(elDphi->at(1)) < 0.0642) elDPhiLoosecut2data = true;
-      if(fabs(elDphi->at(1)) < 0.0359) elDPhiTightcut2data = true;
+      if(fabs(elDphi_data->at(1)) < 0.0642) elDPhiLoosecut2data = true;
+      if(fabs(elDphi_data->at(1)) < 0.0359) elDPhiTightcut2data = true;
       //check sigmaIetaIeta
-      if(elSigmaIetaIetas->at(1) < 0.035) elSigmaIetaIetaLoosecut2data = true;
-      if(elSigmaIetaIetas->at(1) < 0.0305) elSigmaIetaIetaTightcut2data = true;
+      if(elSigmaIetaIetas_data->at(1) < 0.035) elSigmaIetaIetaLoosecut2data = true;
+      if(elSigmaIetaIetas_data->at(1) < 0.0305) elSigmaIetaIetaTightcut2data = true;
       //check H over E
-      if(elHoverEs->at(1) < 0.1115) elHELoosecut2data = true;
-      if(elHoverEs->at(1) < 0.0835) elHETightcut2data = true;
+      if(elHoverEs_data->at(1) < 0.1115) elHELoosecut2data = true;
+      if(elHoverEs_data->at(1) < 0.0835) elHETightcut2data = true;
       //check vertex cuts
-      if(fabs(elD0s->at(1)) < 0.098) elD0Loosecut2data = true;
-      if(fabs(elD0s->at(1)) < 0.0163) elD0Tightcut2data = true;
-      if(fabs(elDZs->at(1)) < 0.9187) elDZLoosecut2data = true;
-      if(fabs(elDZs->at(1)) < 0.5999) elDZTightcut2data = true;
+      if(fabs(elD0s_data->at(1)) < 0.098) elD0Loosecut2data = true;
+      if(fabs(elD0s_data->at(1)) < 0.0163) elD0Tightcut2data = true;
+      if(fabs(elDZs_data->at(1)) < 0.9187) elDZLoosecut2data = true;
+      if(fabs(elDZs_data->at(1)) < 0.5999) elDZTightcut2data = true;
       //ooEmooP cuts
-      if(fabs(elOoEmooPs->at(1)) < 0.1443) elooEmooPLoosecut2data = true;
-      if(fabs(elOoEmooPs->at(1)) < 0.1126) elooEmooPTightcut2data = true;
+      if(fabs(elOoEmooPs_data->at(1)) < 0.1443) elooEmooPLoosecut2data = true;
+      if(fabs(elOoEmooPs_data->at(1)) < 0.1126) elooEmooPTightcut2data = true;
       //pfIsoCuts
-      if(elRelIsos->at(1) < 0.3529) elPFIsoLoosecut2data = true;
-      if(elRelIsos->at(1) < 0.2075) elPFIsoTightcut2data = true;
+      if(elRelIsos_data->at(1) < 0.3529) elPFIsoLoosecut2data = true;
+      if(elRelIsos_data->at(1) < 0.2075) elPFIsoTightcut2data = true;
       //missing hits cuts
-      if(elMHits->at(1) <= 1) elMissingHitsLoosecut2data = true;
-      if(elMHits->at(1) <= 1) elMissingHitsTightcut2data = true;
+      if(elMHits_data->at(1) <= 1) elMissingHitsLoosecut2data = true;
+      if(elMHits_data->at(1) <= 1) elMissingHitsTightcut2data = true;
     }
     
     //now add them all up
@@ -305,7 +305,23 @@ void Ex_2p3(){
     elTight2 = (elDPhiTightcut2data * elDEtaTightcut2data * elSigmaIetaIetaTightcut2data * elHETightcut2data * elD0Tightcut2data * elDZTightcut2data * elooEmooPTightcut2data * elPFIsoTightcut2data * elMissingHitsTightcut2data);
     elLoose1 = (elDPhiLoosecut1data * elDEtaLoosecut1data * elSigmaIetaIetaLoosecut1data * elHELoosecut1data * elD0Loosecut1data * elDZLoosecut1data * elooEmooPLoosecut1data * elPFIsoLoosecut1data * elMissingHitsLoosecut1data);
     elLoose2 = (elDPhiLoosecut2data * elDEtaLoosecut2data * elSigmaIetaIetaLoosecut2data * elHELoosecut2data * elD0Loosecut2data * elDZLoosecut2data * elooEmooPLoosecut2data * elPFIsoLoosecut2data * elMissingHitsLoosecut2data);
+
+    //count events and fill histograms
+    if(elTight1 && elTight2) {
+      Ntt+=1;
+      ttHThist->Fill(HT_data->at(0));
+    }
+    if(elTight1 || elLoose2) {
+      Ntl+=1;
+      tlHThist->Fill(HT_data->at(0));
+    }
+    if(elLoose1 || elTight2) {
+      Nt1+=1;
+      tlHThist->Fill(HT_data->at(0));
+    }
+    if(elLoose1 || elLoose2){
+      Nll+=1;
+      llHThist->Fill(HT_data->at(0));
+    }
   }
-
-
 }
