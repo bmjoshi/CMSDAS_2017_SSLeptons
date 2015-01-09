@@ -14,6 +14,15 @@ void Ex_2p3(){
 
 
   // LOAD THINGS FOR DATA
+  //histograms
+  TH1F* ttHThist_data = new TH1F("ttHThist_data","H_{T} for events with two tight leptons",200,1000.,2000);
+  TH1F* tlHThist_data = new TH1F("tlHThist_data","H_{T} for events with one tight and one loose leptons",200,1000.,2000);
+  TH1F* llHThist_data = new TH1F("llHThist_data","H_{T} for events with two loose leptons",200,1000.,2000);
+
+  //count of events with tight/loose leptons
+  int Ntt_data = 0;
+  int Ntl_data = 0;
+  int Nll_data = 0;
 
   //initialize variables
   int nEntriesdata = tdata->GetEntries();
@@ -39,6 +48,10 @@ void Ex_2p3(){
   vector<double> *elRelIsos_data = 0;
   //sigmaIetaIeta
   vector<double>* elSigmaIetaIetas_data = 0;
+  //jets
+  vector<double>* jetPts_data = 0;
+  //met
+  double met_data = 0;
 
   //set branch addresses
   tdata->SetBranchAddress("diElMass_DileptonCalc", &diElMass_data);
@@ -53,7 +66,8 @@ void Ex_2p3(){
   tdata->SetBranchAddress("elOoemoop_DileptonCalc",&elOoEmooPs_data);
   tdata->SetBranchAddress("elRelIso_DileptonCalc",&elRelIsos_data);
   tdata->SetBranchAddress("elSihih_DileptonCalc",&elSigmaIetaIetas_data);
-
+  tdata->SetBranchAddress("corr_met_DileptonCalc",&met_data);
+  tdata->SetBranchAddress("AK5JetPt_DileptonCalc",&jetPts_data);
 
   //bools for data ids
   //tracking cuts
@@ -161,10 +175,8 @@ void Ex_2p3(){
     if(elPts->size() < 2) continue;
     //z mass veto
     if( (diElMass->at(0) > 76) || (diElMass->at(0) <116) ) continue;
-    //check HT req
-    if( HT_data->at(0) < 1400) continue;
     //check met req
-    if( met_data->at(0) < 100) continue;
+    if( met_data < 100) continue;
     //check lep1pt req
     if(elPts_data->at(0) < 80) continue;
     //check subleading lep pt req
@@ -175,6 +187,12 @@ void Ex_2p3(){
     if(jetPts_data->at(0) < 150) continue;
     //check for second jet
     if(jetPts_data->at(1) < 50) continue;
+    //check HT req
+    float HT = 0;
+    for(int ijet = 0; ijet<jetPts_data->size(); ijet++){
+      HT+= fabs(jetPts_data->at(ijet));
+    }
+    if( HT < 1400) continue;
     
     //check samesign lepton req
     if(elCharge1 != elCharge2) continue;
@@ -308,20 +326,25 @@ void Ex_2p3(){
 
     //count events and fill histograms
     if(elTight1 && elTight2) {
-      Ntt+=1;
-      ttHThist->Fill(HT_data->at(0));
+      Ntt_data+=1;
+      ttHThist_data->Fill(HT);
     }
     if(elTight1 || elLoose2) {
-      Ntl+=1;
-      tlHThist->Fill(HT_data->at(0));
+      Ntl_data+=1;
+      tlHThist_data->Fill(HT);
     }
     if(elLoose1 || elTight2) {
-      Nt1+=1;
-      tlHThist->Fill(HT_data->at(0));
+      Nt1_data+=1;
+      tlHThist_data->Fill(HT);
     }
     if(elLoose1 || elLoose2){
-      Nll+=1;
-      llHThist->Fill(HT_data->at(0));
+      Nll_data+=1;
+      llHThist_data->Fill(HT);
     }
   }
+
+  std::cout<<"Number of tight-tight events: "<<Ntt_data<<std::endl;
+  std::cout<<"Number of tight-loose events: "<<Ntl_data<<std::endl;
+  std::cout<<"Number of loose-loose events: "<<Nll_data<<std::endl;
+
 }
