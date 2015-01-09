@@ -22,8 +22,8 @@ void Ex_2p1(){
   TH1F* masshist = new TH1F("masshist", "Dielectron Invariant Mass",100,0.,200.);
   TH1F* numPtHist = new TH1F("numPtHist","Lepton p_{T} - TIGHT ID",200,0.,400.);
   TH1F* denPtHist = new TH1F("denPtHist","Lepton p_{T} - LOOSE ID",200,0.,400.);
-  TH1F* numEtaHist = new TH1F("numEtaHist","Lepton #eta - TIGHT ID",200,0.,400.);
-  TH1F* denEtaHist = new TH1F("denEtaHist","Lepton #eta - LOOSE ID",200,0.,400.);
+  TH1F* numEtaHist = new TH1F("numEtaHist","Lepton #eta - TIGHT ID",30,-3.,3.);
+  TH1F* denEtaHist = new TH1F("denEtaHist","Lepton #eta - LOOSE ID",30,-3.,3.);
 
   
   int nEntries = tDY->GetEntries();
@@ -257,34 +257,42 @@ void Ex_2p1(){
 	if(elMHits->at(1) <= 1) elMissingHitsTightcut2 = true;
       }
 
-    }
+    
 
-    //check to make sure there is at least one tight lepton, but that the event passes the z mass window cut
-    if( (elTight1 || elTight2) && masscut ){
-      //then fill denominator with other lepton if it's a loose one
-      if(elTight1){
-	if(elLoose2){
-	  denPtHist->Fill(elpts->at(1));
-	  denEtaHist->Fill(elEtas->at(1));
-
-	  if(elTight2){
-	    numPtHist->Fill(elpts->at(1));
-	    numEtaHist0>Fill(elEtas->at(1));
+      //now add them all up
+      elTight1 = (elDPhiTightcut1 * elDEtaTightcut1 * elSigmaIetaIetaTightcut1 * elHETightcut1 * elD0Tightcut1 * elDZTightcut1 * elooEmooPTightcut1 * elPFIsoTightcut1 * elMissingHitsTightcut1);
+      elTight2 = (elDPhiTightcut2 * elDEtaTightcut2 * elSigmaIetaIetaTightcut2 * elHETightcut2 * elD0Tightcut2 * elDZTightcut2 * elooEmooPTightcut2 * elPFIsoTightcut2 * elMissingHitsTightcut2);
+      elLoose1 = (elDPhiLoosecut1 * elDEtaLoosecut1 * elSigmaIetaIetaLoosecut1 * elHELoosecut1 * elD0Loosecut1 * elDZLoosecut1 * elooEmooPLoosecut1 * elPFIsoLoosecut1 * elMissingHitsLoosecut1);
+      elLoose2 = (elDPhiLoosecut2 * elDEtaLoosecut2 * elSigmaIetaIetaLoosecut2 * elHELoosecut2 * elD0Loosecut2 * elDZLoosecut2 * elooEmooPLoosecut2 * elPFIsoLoosecut2 * elMissingHitsLoosecut2);
+      
+      //check to make sure there is at least one tight lepton, but that the event passes the z mass window cut
+      if( (elTight1 || elTight2) && masscut ){
+	//then fill denominator with other lepton if it's a loose one
+	if(elTight1){
+	  if(elLoose2){
+	    denPtHist->Fill(elpts->at(1));
+	    denEtaHist->Fill(elEtas->at(1));
+	    
+	    if(elTight2){
+	      numPtHist->Fill(elpts->at(1));
+	      numEtaHist->Fill(elEtas->at(1));
+	    }
 	  }
+	  
 	}
-
-      }
-      else{
-	if(elLoose1){
-	  denPtHist->Fill(elpts->at(0));
-	  denEtaHist->Fill(elEtas->at(0));
-	  if(elTight1){
-	    numPtHist->Fill(elpts->at(0));
-	    numEtaHist->Fill(elEtas->at(0));
+	else{
+	  if(elLoose1){
+	    denPtHist->Fill(elpts->at(0));
+	    denEtaHist->Fill(elEtas->at(0));
+	    if(elTight1){
+	      numPtHist->Fill(elpts->at(0));
+	      numEtaHist->Fill(elEtas->at(0));
+	    }
 	  }
+	  
 	}
-
       }
+      //finish requirement of two leptons
     }
     //finish loop over entries
   }
