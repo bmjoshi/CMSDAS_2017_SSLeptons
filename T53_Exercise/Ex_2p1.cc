@@ -141,7 +141,7 @@ void Ex_2p1(){
 
       //need to separate between barrel and endcap
       //first lepton
-      if(elEtas->at(0) <= 1.479){
+      if(fabs(elEtas->at(0)) <= 1.479){
 	//check delta Eta between track and supercluster
 	if(fabs(elDeta->at(0)) < 0.0181) elDEtaLoosecut1 = true;
 	if(fabs(elDeta->at(0)) < 0.0091) elDEtaTightcut1 = true;
@@ -199,7 +199,7 @@ void Ex_2p1(){
       }
 
       //now for second lepton
-      if(elEtas->at(1)<=1.479){
+      if(fabs(elEtas->at(1))<=1.479){
 	//check delta Eta between track and supercluster	
 	if(fabs(elDeta->at(1)) < 0.0181) elDEtaLoosecut2 = true;
 	if(fabs(elDeta->at(1)) < 0.0091) elDEtaTightcut2 = true;
