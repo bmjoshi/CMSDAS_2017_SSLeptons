@@ -207,8 +207,8 @@ void Ex_2p1(){
 	if(fabs(elDphi->at(1)) < 0.0936) elDPhiLoosecut2 = true;
 	if(fabs(elDphi->at(1)) < 0.031) elDPhiTightcut2 = true;
 	//check sigmaIetaIeta
-	if(elSigmaIetaIetas->at(1) < 0.0123) elSigmaIetaIetaLoosecut1 = true;
-	if(elSigmaIetaIetas->at(1) < 0.0106) elSigmaIetaIetaTightcut1 = true;
+	if(elSigmaIetaIetas->at(1) < 0.0123) elSigmaIetaIetaLoosecut2 = true;
+	if(elSigmaIetaIetas->at(1) < 0.0106) elSigmaIetaIetaTightcut2 = true;
 	//check H over E
 	if(elHoverEs->at(1) < 0.141) elHELoosecut2 = true;
 	if(elHoverEs->at(1) < 0.0532) elHETightcut2 = true;
