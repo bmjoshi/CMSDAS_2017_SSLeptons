@@ -23,11 +23,24 @@ void Ex_2p3(){
   int Ntt_data = 0;
   int Ntl_data = 0;
   int Nll_data = 0;
+  //count events for each cut
+  int Nmasscut_data=0;
+  int Nmetcut_data=0;
+  int NHTcut_data=0;
+  int Ndilepcut_data=0;
+  int NSSdilepcut_data=0;
+  int NJetscut_data=0;
+  int NJetpt2cut_data=0;
+  int NJetpt1cut_data=0;
 
   //initialize variables
   int nEntriesdata = tdata->GetEntries();
   int nEntriesmc   = tmc->GetEntries();
 
+  //electron charges
+  vector<int> *elCharge1_data = 0;
+  vector<int> *elCharge2_data = 0;
+  //invariant mass
   vector<double> *diElMass_data = 0;
   //kinematic variables
   vector<double> *elpts_data = 0;
@@ -68,7 +81,9 @@ void Ex_2p3(){
   tdata->SetBranchAddress("elSihih_DileptonCalc",&elSigmaIetaIetas_data);
   tdata->SetBranchAddress("corr_met_DileptonCalc",&met_data);
   tdata->SetBranchAddress("AK5JetPt_DileptonCalc",&jetPts_data);
-
+  tdata->SetBranchAddress("elCharge1_DileptonCalc",&elCharge1_data);
+  tdata->SetBranchAddress("elCharge2_DileptonCalc",&elCharge2_data);
+  
   //bools for data ids
   //tracking cuts
   bool elDEtaLoosecut1data = false; // fabs() <0.181;
@@ -169,48 +184,62 @@ void Ex_2p3(){
 
   //event loop - plots to produce: HT distribution for all cuts except 
   for(int iel = 0; iel < nEntriesdata; iel++){
+
     tdata->GetEntry(iel);
-    //    std::cout<<"in event loop"<<std::endl;
+
+
     //check dilepton cut
-    std::cout<<"n leptons is: "<<elpts_data->size()<<std::endl;
+
     if(elpts_data->size() < 2) continue;
-    std::cout<<"passed dilepton cut"<<std::endl;
+    Ndilepcut_data+=1;
+    //check samesign lepton req
+    if(elCharge1_data->at(0) != elCharge2_data->at(0)) continue;
+    NSSdilepcut_data+=1;
     //z mass veto
     if((diElMass_data->size()>0)){
-      if( (diElMass_data->at(0) > 76) || (diElMass_data->at(0) <116) ) continue;
+
+      if( (diElMass_data->at(0) > 76) && (diElMass_data->at(0) <116) )	continue;
     }
-    std::cout<<"passed mass cut"<<std::endl;
+
+    Nmasscut_data +=1;
     //check met req
     if( met_data < 100) continue;
-    std::cout<<"passed met cut"<<std::endl;
+    Nmetcut_data +=1;
+
     //check lep1pt req
     if(elpts_data->at(0) < 80) continue;
-    std::cout<<"passed lep 1 pt"<<std::endl;
+
     //check subleading lep pt req
     if(elpts_data->at(1) < 30) continue;
-    //require more than one jet
+
+   //require more than one jet
     if(jetPts_data->size() < 2) continue;
+    NJetscut_data +=1;
+
     //check for high pt jet
     if(jetPts_data->at(0) < 150) continue;
+    NJetpt1cut_data+=1;
+
     //check for second jet
     if(jetPts_data->at(1) < 50) continue;
+    NJetpt2cut_data+=1;
+
     //check HT req
     float HT = 0;
     for(int ijet = 0; ijet<jetPts_data->size(); ijet++){
       HT+= fabs(jetPts_data->at(ijet));
     }
-    std::cout<<"HT: "<<HT<<std::endl;
-    if( HT < 1400) continue;
-    
-    //check samesign lepton req
-    if(elCharge1 != elCharge2) continue;
+
+    if( HT < 800) continue;
+    NHTcut_data+=1;
+    //std::cout<<"passed all analysis cuts"<<std::endl;
     
     //now that we have made the objects pass all the analysis cuts other than ID we can see how many events there are with 0, 1, and 2 tight leptons
     
     //loop for id
     //need to separate between barrel and endcap
     //first lepton
-    if(elEtas_data->at(0) <= 1.479){
+    if(fabs(elEtas_data->at(0)) <= 1.479){
       //check delta Eta between track and supercluster
       if(fabs(elDeta_data->at(0)) < 0.0181) elDEtaLoosecut1data = true;
       if(fabs(elDeta_data->at(0)) < 0.0091) elDEtaTightcut1data = true;
@@ -268,62 +297,134 @@ void Ex_2p3(){
     }
     
     //now for second lepton
-    if(elEtas_data->at(1)<=1.479){
+    if(fabs(elEtas_data->at(1))<=1.479){
       //check delta Eta between track and supercluster	
-      if(fabs(elDeta_data->at(1)) < 0.0181) elDEtaLoosecut2data = true;
-      if(fabs(elDeta_data->at(1)) < 0.0091) elDEtaTightcut2data = true;
+      if(fabs(elDeta_data->at(1)) < 0.0181){
+	elDEtaLoosecut2data = true; 
+	std::cout<<"passed deta2 loose"<<stdl::endl;
+      }
+      if(fabs(elDeta_data->at(1)) < 0.0091){
+	elDEtaTightcut2data = true;
+	std::cout<<"passed detae tight"<<stdl::endl;
+      }
       //check delta phi between track and supercluster
-      if(fabs(elDphi_data->at(1)) < 0.0936) elDPhiLoosecut2data = true;
-      if(fabs(elDphi_data->at(1)) < 0.031) elDPhiTightcut2data = true;
+      if(fabs(elDphi_data->at(1)) < 0.0936){
+	elDPhiLoosecut2data = true;
+	std::cout<<"passed dphi2 loose"<<stdl::endl;
+      }
+      if(fabs(elDphi_data->at(1)) < 0.031){
+	elDPhiTightcut2data = true;
+	std::cout<<"passed dphi2 tight"<<stdl::endl;
+      }
       //check sigmaIetaIeta
-      if(elSigmaIetaIetas_data->at(1) < 0.0123) elSigmaIetaIetaLoosecut1data = true;
-      if(elSigmaIetaIetas_data->at(1) < 0.0106) elSigmaIetaIetaTightcut1data = true;
+      if(elSigmaIetaIetas_data->at(1) < 0.0123){
+	elSigmaIetaIetaLoosecut2data = true;
+	std::cout<<"passed dsigIeIe 2 loose"<<stdl::endl;
+      }
+      if(elSigmaIetaIetas_data->at(1) < 0.0106){
+	elSigmaIetaIetaTightcut2data = true;
+	std::cout<<"passed dsidIeIe2 tight"<<stdl::endl;
+      }
       //check H over E
-      if(elHoverEs_data->at(1) < 0.141) elHELoosecut2data = true;
-      if(elHoverEs_data->at(1) < 0.0532) elHETightcut2data = true;
+      if(elHoverEs_data->at(1) < 0.141){
+	elHELoosecut2data = true;
+	std::cout<<"passed HE 2 loose"<<stdl::endl;
+      }
+      if(elHoverEs_data->at(1) < 0.0532){
+	elHETightcut2data = true;
+	std::cout<<"passed HE 2 tight"<<stdl::endl;
+      }
       //check vertex cuts
-      if(fabs(elD0s_data->at(1)) < 0.0166) elD0Loosecut2data = true;
-      if(fabs(elD0s_data->at(1)) < 0.0126) elD0Tightcut2data = true;
-      if(fabs(elDZs_data->at(1)) < 0.54342) elDZLoosecut2data = true;
-      if(fabs(elDZs_data->at(1)) < 0.0116) elDZTightcut2data = true;
+      if(fabs(elD0s_data->at(1)) < 0.0166){
+	elD0Loosecut2data = true;
+	std::cout<<"passed d0 2 loose"<<stdl::endl;
+      }
+      if(fabs(elD0s_data->at(1)) < 0.0126){
+	elD0Tightcut2data = true;
+	std::cout<<"passed d0 2 tight"<<stdl::endl;
+      }
+      if(fabs(elDZs_data->at(1)) < 0.54342){
+	elDZLoosecut2data = true;
+	std::cout<<"passed dZ loose"<<stdl::endl;
+      }
+      if(fabs(elDZs_data->at(1)) < 0.0116){
+	elDZTightcut2data = true;
+	std::cout<<"passed dZ 2 tight"<<stdl::endl;
+      }
       //ooEmooP cuts
-      if(fabs(elOoEmooPs_data->at(1)) < 0.1353) elooEmooPLoosecut2data = true;
-      if(fabs(elOoEmooPs_data->at(1)) < 0.0609) elooEmooPTightcut2data = true;
+      if(fabs(elOoEmooPs_data->at(1)) < 0.1353){
+	elooEmooPLoosecut2data = true;
+	std::cout<<"passed ooEmooP 2 loose"<<stdl::endl;
+      }
+      if(fabs(elOoEmooPs_data->at(1)) < 0.0609){
+	elooEmooPTightcut2data = true;
+	std::cout<<"passed ooEmooP 2 tight"<<stdl::endl;
+      }
       //pfIsoCuts
-      if(elRelIsos_data->at(1) < 0.24) elPFIsoLoosecut2data = true;
-      if(elRelIsos_data->at(1) < 0.1649) elPFIsoTightcut2data = true;
+      if(elRelIsos_data->at(1) < 0.24){
+	elPFIsoLoosecut2data = true;
+	std::cout<<"passed pfiso 2 loose"<<stdl::endl;
+      }
+      if(elRelIsos_data->at(1) < 0.1649){
+	elPFIsoTightcut2data = true;
+	std::cout<<"passed pfiso 2 tight"<<stdl::endl;
+      }
       //missing hits cuts
-      if(elMHits_data->at(1) <= 1) elMissingHitsLoosecut2data = true;
-      if(elMHits_data->at(1) <= 1) elMissingHitsTightcut2data = true;
+      if(elMHits_data->at(1) <= 1){
+	elMissingHitsLoosecut2data = true;
+	std::cout<<"passed missing hits 2 loose"<<stdl::endl;
+      }
+      if(elMHits_data->at(1) <= 1){
+	elMissingHitsTightcut2data = true;
+	std::cout<<"passed missing hist 2 tight"<<stdl::endl;
+      }
     }
     
     else{
       //check delta Eta between track and supercluster	
       if(fabs(elDeta_data->at(1)) < 0.0124) elDEtaLoosecut2data = true;
+
       if(fabs(elDeta_data->at(1)) < 0.0106) elDEtaTightcut2data = true;
+
       //check delta phi between track and supercluster
       if(fabs(elDphi_data->at(1)) < 0.0642) elDPhiLoosecut2data = true;
+
       if(fabs(elDphi_data->at(1)) < 0.0359) elDPhiTightcut2data = true;
+
       //check sigmaIetaIeta
       if(elSigmaIetaIetas_data->at(1) < 0.035) elSigmaIetaIetaLoosecut2data = true;
+
       if(elSigmaIetaIetas_data->at(1) < 0.0305) elSigmaIetaIetaTightcut2data = true;
+
       //check H over E
       if(elHoverEs_data->at(1) < 0.1115) elHELoosecut2data = true;
+
       if(elHoverEs_data->at(1) < 0.0835) elHETightcut2data = true;
+
       //check vertex cuts
       if(fabs(elD0s_data->at(1)) < 0.098) elD0Loosecut2data = true;
+
       if(fabs(elD0s_data->at(1)) < 0.0163) elD0Tightcut2data = true;
+
       if(fabs(elDZs_data->at(1)) < 0.9187) elDZLoosecut2data = true;
+
       if(fabs(elDZs_data->at(1)) < 0.5999) elDZTightcut2data = true;
+
       //ooEmooP cuts
       if(fabs(elOoEmooPs_data->at(1)) < 0.1443) elooEmooPLoosecut2data = true;
+
       if(fabs(elOoEmooPs_data->at(1)) < 0.1126) elooEmooPTightcut2data = true;
+
       //pfIsoCuts
       if(elRelIsos_data->at(1) < 0.3529) elPFIsoLoosecut2data = true;
+
       if(elRelIsos_data->at(1) < 0.2075) elPFIsoTightcut2data = true;
+
       //missing hits cuts
       if(elMHits_data->at(1) <= 1) elMissingHitsLoosecut2data = true;
+
       if(elMHits_data->at(1) <= 1) elMissingHitsTightcut2data = true;
+
     }
     
     //now add them all up
@@ -332,24 +433,37 @@ void Ex_2p3(){
     elLoose1 = (elDPhiLoosecut1data * elDEtaLoosecut1data * elSigmaIetaIetaLoosecut1data * elHELoosecut1data * elD0Loosecut1data * elDZLoosecut1data * elooEmooPLoosecut1data * elPFIsoLoosecut1data * elMissingHitsLoosecut1data);
     elLoose2 = (elDPhiLoosecut2data * elDEtaLoosecut2data * elSigmaIetaIetaLoosecut2data * elHELoosecut2data * elD0Loosecut2data * elDZLoosecut2data * elooEmooPLoosecut2data * elPFIsoLoosecut2data * elMissingHitsLoosecut2data);
 
+    if(elTight1){
+      std::cout<<"found a tight lepton1"<<std::endl;
+    }
+    if(elLoose1) std::cout<<"found a loose lepton1"<<std::endl;
+    if(elTight2) std::cout<<"found a tight lepton2"<<std::endl;
+    if(elLoose2) std::cout<<"found a loose lepton2"<<std::endl;
+
     //count events and fill histograms
     if(elTight1 && elTight2) {
       Ntt_data+=1;
       ttHThist_data->Fill(HT);
     }
-    if(elTight1 || elLoose2) {
+    else if( (elTight1 && elLoose2) || (elLoose1 && elTight2)) {
       Ntl_data+=1;
       tlHThist_data->Fill(HT);
     }
-    if(elLoose1 || elTight2) {
-      Nt1_data+=1;
-      tlHThist_data->Fill(HT);
-    }
-    if(elLoose1 || elLoose2){
+    else if(elLoose1 && elLoose2){
       Nll_data+=1;
       llHThist_data->Fill(HT);
     }
   }
+
+  std::cout<<"Number of events passing dilepton cut: "<<Ndilepcut_data<<std::endl;
+  std::cout<<"Number of events passing SS dilepton cut: "<<NSSdilepcut_data<<std::endl;
+  std::cout<<"Number of eventspassing mass cut: "<<Nmasscut_data<<std::endl;
+  std::cout<<"Number of eventspassing met cut: "<<Nmetcut_data<<std::endl;
+  std::cout<<"Number of eventspassing NJets cut: "<<NJetscut_data<<std::endl;
+  std::cout<<"Number of eventspassing Jetpt1 cut: "<<NJetpt1cut_data<<std::endl;
+  std::cout<<"Number of eventspassing Jetpt2 cut: "<<NJetpt2cut_data<<std::endl;
+  std::cout<<"Number of events passing HT cut: "<<NHTcut_data<<std::endl;
+
 
   std::cout<<"Number of tight-tight events: "<<Ntt_data<<std::endl;
   std::cout<<"Number of tight-loose events: "<<Ntl_data<<std::endl;
