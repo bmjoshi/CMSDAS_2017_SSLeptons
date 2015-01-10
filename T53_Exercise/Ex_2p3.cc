@@ -5,6 +5,21 @@
 
 void Ex_2p3(){
 
+
+  ///PLACE TO ADD IN NUMBERS FOR PROMPT AND FAKE RATE
+  float f_e = 0.1;
+  float p_e = 1.0;
+
+  //variables we will use later based on that:
+  float eps_e = (f_e) / (1-f_e);
+  float eta_e = (1 - p_e) / (p_e);
+
+  //total numver of events
+  float Nfp_data;
+  float Nff_data;
+  float Nfp_mc;
+  float Nff_mc;
+
   //load the 'data' and mc
   TFile* fdata = new TFile("ljmet_tree_TT1.root");
   TFile* fmc   = new TFile("ljmet_tree_TT2.root");
@@ -32,6 +47,8 @@ void Ex_2p3(){
   int NJetscut_data=0;
   int NJetpt2cut_data=0;
   int NJetpt1cut_data=0;
+
+ 
 
   //initialize variables
   int nEntriesdata = tdata->GetEntries();
@@ -301,82 +318,82 @@ void Ex_2p3(){
       //check delta Eta between track and supercluster	
       if(fabs(elDeta_data->at(1)) < 0.0181){
 	elDEtaLoosecut2data = true; 
-	std::cout<<"passed deta2 loose"<<stdl::endl;
+	//std::cout<<"passed deta2 loose"<<stdl::endl;
       }
       if(fabs(elDeta_data->at(1)) < 0.0091){
 	elDEtaTightcut2data = true;
-	std::cout<<"passed detae tight"<<stdl::endl;
+	//std::cout<<"passed detae tight"<<stdl::endl;
       }
       //check delta phi between track and supercluster
       if(fabs(elDphi_data->at(1)) < 0.0936){
 	elDPhiLoosecut2data = true;
-	std::cout<<"passed dphi2 loose"<<stdl::endl;
+	//std::cout<<"passed dphi2 loose"<<stdl::endl;
       }
       if(fabs(elDphi_data->at(1)) < 0.031){
 	elDPhiTightcut2data = true;
-	std::cout<<"passed dphi2 tight"<<stdl::endl;
+	//std::cout<<"passed dphi2 tight"<<stdl::endl;
       }
       //check sigmaIetaIeta
       if(elSigmaIetaIetas_data->at(1) < 0.0123){
 	elSigmaIetaIetaLoosecut2data = true;
-	std::cout<<"passed dsigIeIe 2 loose"<<stdl::endl;
+	//std::cout<<"passed dsigIeIe 2 loose"<<stdl::endl;
       }
       if(elSigmaIetaIetas_data->at(1) < 0.0106){
 	elSigmaIetaIetaTightcut2data = true;
-	std::cout<<"passed dsidIeIe2 tight"<<stdl::endl;
+	//std::cout<<"passed dsidIeIe2 tight"<<stdl::endl;
       }
       //check H over E
       if(elHoverEs_data->at(1) < 0.141){
 	elHELoosecut2data = true;
-	std::cout<<"passed HE 2 loose"<<stdl::endl;
+	//std::cout<<"passed HE 2 loose"<<stdl::endl;
       }
       if(elHoverEs_data->at(1) < 0.0532){
 	elHETightcut2data = true;
-	std::cout<<"passed HE 2 tight"<<stdl::endl;
+	//std::cout<<"passed HE 2 tight"<<stdl::endl;
       }
       //check vertex cuts
       if(fabs(elD0s_data->at(1)) < 0.0166){
 	elD0Loosecut2data = true;
-	std::cout<<"passed d0 2 loose"<<stdl::endl;
+	//std::cout<<"passed d0 2 loose"<<stdl::endl;
       }
       if(fabs(elD0s_data->at(1)) < 0.0126){
 	elD0Tightcut2data = true;
-	std::cout<<"passed d0 2 tight"<<stdl::endl;
+	//std::cout<<"passed d0 2 tight"<<stdl::endl;
       }
       if(fabs(elDZs_data->at(1)) < 0.54342){
 	elDZLoosecut2data = true;
-	std::cout<<"passed dZ loose"<<stdl::endl;
+	//std::cout<<"passed dZ loose"<<stdl::endl;
       }
       if(fabs(elDZs_data->at(1)) < 0.0116){
 	elDZTightcut2data = true;
-	std::cout<<"passed dZ 2 tight"<<stdl::endl;
+	//std::cout<<"passed dZ 2 tight"<<stdl::endl;
       }
       //ooEmooP cuts
       if(fabs(elOoEmooPs_data->at(1)) < 0.1353){
 	elooEmooPLoosecut2data = true;
-	std::cout<<"passed ooEmooP 2 loose"<<stdl::endl;
+	//std::cout<<"passed ooEmooP 2 loose"<<stdl::endl;
       }
       if(fabs(elOoEmooPs_data->at(1)) < 0.0609){
 	elooEmooPTightcut2data = true;
-	std::cout<<"passed ooEmooP 2 tight"<<stdl::endl;
+	//std::cout<<"passed ooEmooP 2 tight"<<stdl::endl;
       }
       //pfIsoCuts
       if(elRelIsos_data->at(1) < 0.24){
 	elPFIsoLoosecut2data = true;
-	std::cout<<"passed pfiso 2 loose"<<stdl::endl;
+	//std::cout<<"passed pfiso 2 loose"<<stdl::endl;
       }
       if(elRelIsos_data->at(1) < 0.1649){
 	elPFIsoTightcut2data = true;
-	std::cout<<"passed pfiso 2 tight"<<stdl::endl;
+	//std::cout<<"passed pfiso 2 tight"<<stdl::endl;
       }
       //missing hits cuts
       if(elMHits_data->at(1) <= 1){
 	elMissingHitsLoosecut2data = true;
-	std::cout<<"passed missing hits 2 loose"<<stdl::endl;
+	//std::cout<<"passed missing hits 2 loose"<<stdl::endl;
       }
       if(elMHits_data->at(1) <= 1){
 	elMissingHitsTightcut2data = true;
-	std::cout<<"passed missing hist 2 tight"<<stdl::endl;
+	//std::cout<<"passed missing hist 2 tight"<<stdl::endl;
       }
     }
     
@@ -432,14 +449,14 @@ void Ex_2p3(){
     elTight2 = (elDPhiTightcut2data * elDEtaTightcut2data * elSigmaIetaIetaTightcut2data * elHETightcut2data * elD0Tightcut2data * elDZTightcut2data * elooEmooPTightcut2data * elPFIsoTightcut2data * elMissingHitsTightcut2data);
     elLoose1 = (elDPhiLoosecut1data * elDEtaLoosecut1data * elSigmaIetaIetaLoosecut1data * elHELoosecut1data * elD0Loosecut1data * elDZLoosecut1data * elooEmooPLoosecut1data * elPFIsoLoosecut1data * elMissingHitsLoosecut1data);
     elLoose2 = (elDPhiLoosecut2data * elDEtaLoosecut2data * elSigmaIetaIetaLoosecut2data * elHELoosecut2data * elD0Loosecut2data * elDZLoosecut2data * elooEmooPLoosecut2data * elPFIsoLoosecut2data * elMissingHitsLoosecut2data);
-
+    /*
     if(elTight1){
       std::cout<<"found a tight lepton1"<<std::endl;
     }
     if(elLoose1) std::cout<<"found a loose lepton1"<<std::endl;
     if(elTight2) std::cout<<"found a tight lepton2"<<std::endl;
     if(elLoose2) std::cout<<"found a loose lepton2"<<std::endl;
-
+    */
     //count events and fill histograms
     if(elTight1 && elTight2) {
       Ntt_data+=1;
@@ -468,5 +485,18 @@ void Ex_2p3(){
   std::cout<<"Number of tight-tight events: "<<Ntt_data<<std::endl;
   std::cout<<"Number of tight-loose events: "<<Ntl_data<<std::endl;
   std::cout<<"Number of loose-loose events: "<<Nll_data<<std::endl;
+
+
+
+  //NOW CONVERT THESE INTO HOW MANY PASSING EVENTS ARE FROM BACKGROUND WITHOUT A PROMPT LEPTON
+
+  Nfp_data = ( eps_e / ( (1-eps_e*eta_e) * ( 1 - eps_e *eta_e))) * ( (-eps_e * Nll_data) + (eta_e * eps_e * Ntl_data) + (Ntl_data) - (eta_e*Ntt_data) );
+
+  Nff_data = ( pow( eps_e, 2) / ( pow( 1 - eps_e*eta_e,2))) * ( (Nll_data) - (eta_e*Ntl_data)* - (eta_e*Ntl_data) + (eta_e*eta_e*Ntt_data));
+
+  std::cout<<"Nfp_pass: "<<Nfp_data<<std::endl;
+  std::cout<<"Nff_pass: "<<Nff_data<<std::endl;
+
+
 
 }
