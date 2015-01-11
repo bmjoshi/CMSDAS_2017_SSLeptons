@@ -322,17 +322,40 @@ void Ex_2p3(){
 
     //now check for same sign:
     bool samesign = false;   
+    //vector to hold the leptons that are same sign
+    vector<Lepton*> vSSLep;
 
     for(unsigned int uiLep = 0; uiLep<VLep.size(); uiLep++){
+      //make sure lepton at least passes loose requirement
+      if(! ( VLep.at(uiLep)->tight() || vLep.at(uiLep)->loose())) continue;
       //get charge
       int charge1 = VLep.at(uiLep)->charge;
       for(unsigned int ujLep = uiLep+1; ujLep < VLep.size(); ujLep++){
+	//make sure second lepton is at least loose
+	if(! ( VLep.at(ujLep)->tight() || vLep.at(ujLep)->loose())) continue;
 	if( charge1 == VLep.at(ujLep)->charge) samesign = true;
+      }
+      if(samesign){
+	vSSLep.push_back(VLep.at(uiLep));
+	vSSLep.push_back(VLep.at(ujLep));
       }
       if(samesign) break;
     }
 
+    //skip event without same sign leptons
+    if(!samesign) continue;
 
+    //now get lepton id information
+    if(vSSLep.at(0)->tight()){
+      if(vSSLep.at(1)->tight()) Ntt_data +=1;
+      else{
+	if(vSSLep.at(0).isEl){
+	  if(vSSLep.at(1).isEl){
+	    //???
+	    }
+	  else if(vSSLep.at(1).isMu){
+	    Ntl_data+=1;
+      }
     /*
 
     //check dilepton cut
@@ -560,19 +583,6 @@ void Ex_2p3(){
     if(elLoose2) std::cout<<"found a loose lepton2"<<std::endl;
     */
     //count events and fill histograms
-    if(elTight1 && elTight2) {
-      Ntt_data+=1;
-      ttHThist_data->Fill(HT);
-    }
-    else if( (elTight1 && elLoose2) || (elLoose1 && elTight2)) {
-      Ntl_data+=1;
-      tlHThist_data->Fill(HT);
-    }
-    else if(elLoose1 && elLoose2){
-      Nll_data+=1;
-      llHThist_data->Fill(HT);
-    }
-  }
 
   //  std::cout<<"Number of events passing dilepton cut: "<<Ndilepcut_data<<std::endl;
   //std::cout<<"Number of events passing SS dilepton cut: "<<NSSdilepcut_data<<std::endl;
