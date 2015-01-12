@@ -24,6 +24,7 @@ public:
   int    chargeConsistency;
 
   bool isEl;
+  bool isMu;
 
   bool tight(){
     //Barrel
@@ -104,6 +105,8 @@ public:
     sigmaIetaIeta = -100;
     
     chargeConsistency = 0;
+    isEl = false;
+    isMu = false;
   }
 
 };
@@ -117,6 +120,7 @@ public:
   int charge;
   int isLoose;
   int isTight;
+  bool isEl;
   bool isMu;
 
   bool tight(){
@@ -128,9 +132,22 @@ public:
     if(!isLoose) return false;
     else return true;
   }
+
+  void init(){
+    pt   = -100;
+    eta  = -100;
+    phi  = -100;
+
+    charge = 10.5;
+
+    isLoose = -1;
+    isTight = -1;
+    isEl = false;
+    isMu = false;
+  }
 };
 
 class Lepton : public Electron, public Muon{
 public:
-  double dummy;
+
 };
