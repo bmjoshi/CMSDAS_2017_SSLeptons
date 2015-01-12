@@ -12,14 +12,14 @@ const double M_MU = 0.1056583715;   //Mass of muon in GeV
 const double M_Z  = 91.1876;        //Mass of Z boson
 const double dM   = 15;             //Size of window around Z
 
-void Ex_1p1_newId(){
+void Ex_1p1.(){
   /*
     The first part of this script is just a lot of logistics: initializing variables, getting information from the ttree, etc. To complete the exercise you don't need to understand all of it,
     but please feel free to use it as a reference for how to get information from a ttree and loop over all the entries.
   */
 
   //load file and tree
-  TFile* f = new TFile("ljmet_tree_DY.root");
+  TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
   TTree* t = f->Get("ljmet");
 
   int nEntries = t->GetEntries();
