@@ -3,6 +3,7 @@
 #include "TTree.h"
 #include "TH1.h"
 #include "ObjectID.C"
+#include <vector>
 
 const double M_EL = 0.000510998928; //Mass of electron in GeV
 const double M_MU = 0.1056583715;   //Mass of muon in GeV
@@ -217,11 +218,11 @@ void Ex_2p3(){
 
     //Put electrons back together into coherent objects and add to lepton vector
 
-    vector <Electron*> vEl;
+    vector <Lepton*> vLep;
     //vector <Electron*> vEl;
     for (unsigned int uiEl = 0; uiEl < elPts->size(); uiEl++){
       Electron* el = new Electron;
-
+      
       el->pt                = elPts->at(uiEl);
       el->eta               = elEtas->at(uiEl);
       el->phi               = elPhis->at(uiEl);
@@ -237,7 +238,8 @@ void Ex_2p3(){
       el->sigmaIetaIeta     = elSigmaIetaIetas->at(uiEl);
       el->chargeConsistency = elChargeConsistency->at(uiEl);
       el->isEl              = true;
-      vEl.push_back(el);
+      el->isMu              = false;
+      vLep.push_back(el);
     }
 
     //add muons to lepton vector
@@ -249,6 +251,7 @@ void Ex_2p3(){
       mu->phi     = muPhis->at(uiMu);
       mu->isLoose = muIsLoose->at(uiMu);
       mu->isTight = muIsTight->at(uiMu);
+      mu->isEl    = false;
       mu->isMu    = true;
 
       vLep.push_back(mu);
@@ -311,6 +314,8 @@ void Ex_2p3(){
     //skip event without same sign leptons
     if(!samesign) continue;
     
+
+
     //need to separate out different channels:
     bool ee   = false;
     bool emu  = false;
