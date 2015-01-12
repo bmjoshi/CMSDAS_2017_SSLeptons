@@ -121,8 +121,9 @@ void Ex_2p1(){
       el->relIso            = elRelIsos->at(uiEl);
       el->sigmaIetaIeta     = elSigmaIetaIetas->at(uiEl);
       el->chargeConsistency = elChargeConsistency->at(uiEl);
-      
+
       vEl.push_back(el);
+
     }
 
     //vector for lepton pair
@@ -132,9 +133,9 @@ void Ex_2p1(){
     for(unsigned int ui = 0; ui < vEl.size(); ui++){
       //Apply loose selection to the electron
       if (!vEl.at(ui)->loose()) continue;
+
       for(unsigned int uj = ui + 1; uj < vEl.size(); uj++){
 	if (!vEl.at(uj)->loose()) continue;
-
 	TLorentzVector v1, v2;
 	v1.SetPtEtaPhiM(vEl.at(ui)->pt, vEl.at(ui)->eta, vEl.at(ui)->phi, M_EL);
 	v2.SetPtEtaPhiM(vEl.at(uj)->pt, vEl.at(uj)->eta, vEl.at(uj)->phi, M_EL);
