@@ -303,6 +303,7 @@ void Ex_1p2(){
   //loop over DY
   int nEntDY = tDY->GetEntries();
   for(int ient = 0; ient <nEntDY; ient++){
+    tDY->GetEntry(ient);
     vector <Electron*> vEl;
     for (unsigned int uiEl = 0; uiEl < elPtsDY->size(); uiEl++){
       Electron* el = new Electron;
@@ -329,6 +330,7 @@ void Ex_1p2(){
     for(unsigned int ui = 0; ui < vEl.size(); ui++){
       //Apply tight selection to the electron
       if (!vEl.at(ui)->tight()) continue;
+      
       for(unsigned int uj = ui + 1; uj < vEl.size(); uj++){
 	if (!vEl.at(uj)->tight()) continue;
 
@@ -340,6 +342,7 @@ void Ex_1p2(){
 	if (mass > M_Z - dM && mass < M_Z + dM){
 	  foundPair = true;
 	  Nos_DY+=1;
+
 	  if (vEl.at(ui)->charge == vEl.at(uj)->charge){
 	    Nss_DY+=1;
 	  }
@@ -354,6 +357,7 @@ void Ex_1p2(){
   //loop over TT
   int nEntTT = tTT->GetEntries();
   for( int ient = 0; ient <nEntTT; ient++){
+    tTT->GetEntry(ient);
     vector <Electron*> vEl;
     for (unsigned int uiEl = 0; uiEl < elPtsTT->size(); uiEl++){
       Electron* el = new Electron;
@@ -405,6 +409,7 @@ void Ex_1p2(){
   //loop over TTZ
   int nEntTTZ = tTTZ->GetEntries();
   for(int ient = 0; ient <nEntTTZ; ient++){
+    tTTZ->GetEntry(ient);
     vector <Electron*> vEl;
     for (unsigned int uiEl = 0; uiEl < elPtsTTZ->size(); uiEl++){
       Electron* el = new Electron;
@@ -456,6 +461,7 @@ void Ex_1p2(){
   //loop over WZ
   int nEntWZ = tWZ->GetEntries();
   for(int ient = 0; ient <nEntWZ; ient++){
+    tWZ->GetEntry(ient);
     vector <Electron*> vEl;
     for (unsigned int uiEl = 0; uiEl < elPtsWZ->size(); uiEl++){
       Electron* el = new Electron;
@@ -507,6 +513,7 @@ void Ex_1p2(){
   //loop over WJets
   int nEntWJets = tWJets->GetEntries();
   for( int ient = 0; ient <nEntWJets; ient++){
+    tWJets->GetEntry(ient);
     vector <Electron*> vEl;
     for (unsigned int uiEl = 0; uiEl < elPtsWJets->size(); uiEl++){
       Electron* el = new Electron;
