@@ -1,13 +1,27 @@
 #include <iostream>
+#include <vector>
 #include "TTree.h"
 #include "TFile.h"
 #include "TCanvas.h"
 #include "TH1.h"
+#include "ObjectID.C"
+#include "TLorentzVector.h"
+
+const double M_EL = 0.000510998928; //Mass of electron in GeV
+const double M_MU = 0.1056583715;   //Mass of muon in GeV
+const double M_Z  = 91.1876;        //Mass of Z boson
+const double dM   = 15;             //Size of window around Z
 
 void Ex_1p3(){
 
+
+  /*add in charge misID rate you measured earlier, weights should conform to the following binning for eta:
+    (-3.0 to -2.6, -2.6 to -2.2, -2.2 to -1.8, -1.8 to -1.4, -1.4 to -1.0, -1.0 to -0.6, -0.6 to -0.2, -0.2 to 0.2, 0.2 to 0.6, 0.6 to 1.0, 1.0 to 1.4, 1.4 to 1.8, 1.8 to 2.2, 2.2 to 2.6, 2.6 to 3.0)
+   */
+  float weights[15] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+
   //load 'data' file - in this case ttbar mc
-  TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT.root");
+  TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
   TTree* t = (TTree*)f->Get("ljmet");
 
   int nEntries = t->GetEntries();
@@ -34,6 +48,7 @@ void Ex_1p3(){
   vector<double> *elRelIsos = 0;
   //sigmaIetaIeta
   vector<double>* elSigmaIetaIetas = 0;
+  vector<int>* elChargeConsistency = 0;
   //jets
   vector<double>* jetPts = 0;
   //met
@@ -56,16 +71,16 @@ void Ex_1p3(){
   t->SetBranchAddress("elChargeConsistent_DileptonCalc",&elChargeConsistency);
   t->SetBranchAddress("corr_met_DileptonCalc",&met);
   t->SetBranchAddress("AK5JetPt_DileptonCalc",&jetPts);
-
+  t->SetBranchAddress("elChargeConsistent_DileptonCalc",&elChargeConsistency);
   //Histograms
-  TH1F* ssEtaHist = new TH1F("ssEtaHist","#eta",30,-3,3);
+  //TH1F* ssEtaHist = new TH1F("ssEtaHist","#eta",30,-3,3);
   TH1F* osEtaHist = new TH1F("osEtaHist","#eta",30,-3,3);
 
-  TH1F* ssPtHist = new TH1F("ssPtHist","p_{T}",100,0.,200.);
+  //TH1F* ssPtHist = new TH1F("ssPtHist","p_{T}",100,0.,200.);
   TH1F* osPtHist = new TH1F("osPtHist","p_{T}",100,0.,200.);
 
-  TH1F* ssHTHist = new TH1F("ssHTHist","Weight H_{T} of charge misID events",500,0.,1500);
-  TH1F* osHTHist = new TH1F("osHTHist","H_{T} of opposite sign dilepton events",500,0.,1500);
+  //TH1F* ssHTHist = new TH1F("ssHTHist","Weight H_{T} of charge misID events",500,0.,1500);
+  TH1F* osHTHist = new TH1F("osHTHist","H_{T} of opposite sign dilepton events",30,0.,1500);
 
 
   //Loop over the tree and look for an electron pair that makes a Z
@@ -93,11 +108,21 @@ void Ex_1p3(){
 
     //check HT req
     float HT = 0;
-    for(int ijet = 0; ijet<jetPts->size(); ijet++){
+    for(unsigned int ijet = 0; ijet<jetPts->size(); ijet++){
       HT+= fabs(jetPts->at(ijet));
     }
 
-    if( HT < 800) continue;
+    if( HT < 700) continue;
+
+    //now make ST cut;
+    float ST = HT;
+    for(unsigned int uiEl = 0; uiEl < elPts->size(); uiEl++){
+      ST+=elPts->at(uiEl);
+    }
+
+    ST+=met;
+
+    if(ST<900) continue; //ST cut
 
     //Put electrons back together into coherent objects
     vector <Electron*> vEl;
@@ -125,7 +150,7 @@ void Ex_1p3(){
     bool foundPair = false;
 
     //vector for tight electrons
-    vector<Electonr*> vTightEl;
+    vector<Electron*> vTightEl;
 
     for(unsigned int ui = 0; ui < vEl.size(); ui++){
       //Apply tight selection to the electron
@@ -153,13 +178,40 @@ void Ex_1p3(){
     //require only two tight leptons
     if(vTightEl.size()!=2) continue;
     //require opposite charges
-    if(vTightEl.at(0)->charge==vTightEl.at(1)->charge()) continue;
+    if(vTightEl.at(0)->charge==vTightEl.at(1)->charge) continue;
 
-    //now fill histograms
 
-    //now we can fill histograms because events have passed
+    //now we can fill histograms because events have passed the cuts required
+    osEtaHist->Fill(vTightEl.at(0)->eta);
+    osEtaHist->Fill(vTightEl.at(1)->eta);
 
+    osPtHist->Fill(vTightEl.at(0)->pt);
+    osPtHist->Fill(vTightEl.at(1)->pt);
+
+    osHTHist->Fill(HT);
+
+    /*now we want to fill our predicted HT distribution with the os events weighted by the appropriate weights
+      I've written a simple function that gives the correct element of the weight array if you pass it the eta of the electron.
+      Usage is simply EtaWeight(weightsarray, eta). Take advantage or it to make life easier :)
+     */
+
+    // ADD CODE HERE TO CALCULATE PROBABLITY FOR EACH EVENT
+
+    float ee_weight = ;// fill in
+    float emu_eight = ;// fill in
+
+    //fill HT histogram
+    if(ee){
+      ssHTHist_ee->Fill(HT,ee_weight);
+    }
+    if(emu){
+      ssHTHist_emu->Fill(HT,emu_weight);
+    }
     //end event loop
   }
+
+  TCanvas c1;
+  osHTHist->Draw();
+  c1.Print("HT_oppositeSignEvents.pdf");
 
 }
