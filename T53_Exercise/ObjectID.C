@@ -39,6 +39,7 @@ public:
       if(relIso > 0.1649)        return false;
       if(mHits > 1)              return false;
       if(chargeConsistency < 1)  return false;
+      if(pt <20)                 return false;
     }
     //Endcap
     else{
@@ -52,6 +53,7 @@ public:
       if(relIso > 0.2075)        return false;
       if(mHits > 1)              return false;
       if(chargeConsistency < 1)  return false;
+      if(pt <20)                 return false;
     }
     return true;
   }
@@ -68,6 +70,7 @@ public:
       if(relIso > 0.24)          return false;
       if(mHits > 1)              return false;
       if(chargeConsistency < 1)  return false;
+      if(pt <20)                 return false;
     }
     //Endcap
     else{
@@ -81,6 +84,7 @@ public:
       if(relIso > 0.3529)        return false;
       if(mHits > 1)              return false;
       if(chargeConsistency < 1)  return false;
+      if(pt <20)                 return false;
     }
     return true;
   }
@@ -125,11 +129,13 @@ public:
 
   bool tight(){
     if(!isTight) return false;
+    if(pt<20) return false;
     else return true;
   }
 
   bool loose(){
     if(!isLoose) return false;
+    if(pt<20) return false;
     else return true;
   }
 
