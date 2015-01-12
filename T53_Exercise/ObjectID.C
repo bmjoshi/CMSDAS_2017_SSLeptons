@@ -22,7 +22,9 @@ public:
   double relIso;
   double sigmaIetaIeta;
   int    chargeConsistency;
-  
+
+  bool isEl;
+
   bool tight(){
     //Barrel
     if(fabs(eta) <= 1.479){
@@ -115,6 +117,7 @@ public:
   int charge;
   int isLoose;
   int isTight;
+  bool isMu;
 
   bool tight(){
     if(!isTight) return false;
@@ -125,4 +128,8 @@ public:
     if(!isLoose) return false;
     else return true;
   }
+};
+
+class Lepton : public Electron, public Muon{
+
 };
