@@ -34,7 +34,7 @@ public:
       if(sigmaIetaIeta > 0.0106) return false;
       if(hOverE > 0.0532)        return false;
       if(fabs(d0) > 0.0126)      return false;
-      if(fabs(dZ) > 0.0116)    return false;
+      if(fabs(dZ) > 0.0116)      return false;
       if(fabs(ooEmooP) > 0.0609) return false;
       if(relIso > 0.1649)        return false;
       if(mHits > 1)              return false;
@@ -59,7 +59,7 @@ public:
   }
   bool loose(){
     //Barrel
-    if(fabs(eta) >= 1.479){
+    if(fabs(eta) <= 1.479){
       if(fabs(dEta) > 0.0181)    return false;
       if(fabs(dPhi) > 0.0936)    return false;
       if(sigmaIetaIeta > 0.0123) return false;
@@ -72,6 +72,7 @@ public:
       if(chargeConsistency < 1)  return false;
       if(pt <20)                 return false;
     }
+
     //Endcap
     else{
       if(fabs(dEta) > 0.0124)    return false;
