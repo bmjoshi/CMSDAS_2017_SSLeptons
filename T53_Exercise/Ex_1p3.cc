@@ -12,6 +12,8 @@ const double M_MU = 0.1056583715;   //Mass of muon in GeV
 const double M_Z  = 91.1876;        //Mass of Z boson
 const double dM   = 15;             //Size of window around Z
 
+double EtaWeight(double weights[],double eta)
+
 void Ex_1p3(){
 
 
@@ -213,5 +215,15 @@ void Ex_1p3(){
   TCanvas c1;
   osHTHist->Draw();
   c1.Print("HT_oppositeSignEvents.pdf");
+
+}
+
+
+double EtaWeight(double weights[],float eta){
+
+  float fbin = fabs(-3.0-eta)/0.4;
+  std::cout<<"eta diff "<<fbin<<std::endl;
+  int bin = (int) fbin;
+  return weights[bin];
 
 }
