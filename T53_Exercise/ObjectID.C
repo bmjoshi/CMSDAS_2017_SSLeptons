@@ -131,5 +131,6 @@ public:
 };
 
 class Lepton : public Electron, public Muon{
-
+public:
+  double dummy;
 };
