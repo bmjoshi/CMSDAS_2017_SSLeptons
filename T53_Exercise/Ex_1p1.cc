@@ -70,8 +70,8 @@ void Ex_1p1(){
   TH1F* osmass = new TH1F("osmass","DiElecton Invariant Mass for Opposite-Sign Events",100,0.,200.);
   TH1F* ssmass = new TH1F("ssmass","DiElecton Invariant Mass for Same-Sign Events",100,0.,200.);
 
-  TH1F* ssEtaHist = new TH1F("ssEtaHist","#eta",30,-3,3);
-  TH1F* totEtaHist = new TH1F("totEtaHist","#eta",30,-3,3);
+  TH1F* ssEtaHist = new TH1F("ssEtaHist","#eta",15,-3,3);
+  TH1F* totEtaHist = new TH1F("totEtaHist","#eta",15,-3,3);
 
   TH1F* ssPtHist = new TH1F("ssPtHist","p_{T}",100,0.,200.);
   TH1F* totPtHist = new TH1F("totPtHist","p_{T}",100,0.,200.);
