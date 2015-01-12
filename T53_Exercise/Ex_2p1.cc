@@ -140,30 +140,23 @@ void Ex_2p1(){
     
     //check to make sure there is at least one tight lepton
     if( elTight1 || elTight2){
-      //then fill denominator with other lepton if it's a loose one
-      if(elTight1){
-	if(elLoose2){
-	  denPtHist->Fill(vElPair.at(1)->pt);
-	  denEtaHist->Fill(vElPair.at(1)->eta);
-	  
-	  if(elTight2){
-	    numPtHist->Fill(vElPair.at(1)->pt);
-	    numEtaHist->Fill(vElPair.at(1)->eta);
-	  }
+      if(elLoose1) {
+	denPtHist->Fill(vElPair.at(0)->pt);
+	denEtaHist->Fill(vElPair.at(0)->eta);
+	if(elTight1){
+	  numPtHist->Fill(vElPair.at(0)->pt);
+	  numEtaHist->Fill(vElPair.at(0)->eta);
 	}
-	
       }
-      /*      else{
-	if(elLoose1){
-	  denPtHist->Fill(vElPair.at(0)->pt);
-	  denEtaHist->Fill(vElPair.at(0)->eta);
-	  if(elTight1){
-	    numPtHist->Fill(vElPair.at(0)->pt);
-	    numEtaHist->Fill(vElPair.at(0)->eta);
-	  }
+      if(elLoose2){
+	denPtHist->Fill(vElPair.at(1)->pt);
+	denEtaHist->Fill(vElPair.at(1)->eta);
+	if(elTight2){
+	  numPtHist->Fill(vElPair.at(1)->pt);
+	  numEtaHist->Fill(vElPair.at(1)->eta);
 	}
-	
-	}*/
+      }
+
     }
     
     
