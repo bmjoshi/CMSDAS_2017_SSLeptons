@@ -246,11 +246,11 @@ void Ex_1p2(){
   float targetlumi = 5.0;
 
   //To simplify things a little I've placed the number of events ran over for each sample below:
-  float nRunDY = pow( 10, 5);
-  float nRunWZ = pow( 10, 5);
-  float nRunWJets = pow( 10, 5);
-  float nRunTT = pow( 10, 5);
-  float nRunTTZ = pow( 10, 5);
+  float nRunDY = 1366703;
+  float nRunWZ = 237484;
+  float nRunWJets = 3828404;
+  float nRunTT = 2206600;
+  float nRunTTZ = 249275;
   
   /* Now, to figure out how to scale things correctly we need to remember the following equation:
 
