@@ -26,11 +26,13 @@ void Ex_2p3(){
   float eta_mu = (1 - p_mu) / (p_mu);
 
   //total number of events
-  float Npf_data;
-  float Nfp_data;
-  float Nff_data;
-  float Nfp_mc;
-  float Nff_mc;
+  float Npf_emu;
+  float Nfp_emu;
+  float Nff_emu;
+  float Nfp_ee;
+  float Nff_ee;
+  float Nfp_mumu;
+  float Nff_mumu;
 
   //load the 'data' and mc
   TFile* fdata = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
