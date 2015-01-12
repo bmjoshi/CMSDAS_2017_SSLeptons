@@ -2,6 +2,7 @@
 #include <vector>
 #include "TTree.h"
 #include "TFile.h"
+#include "TCanvas.h"
 #include "TH1.h"
 #include "TGraphAsymmErrors.h"
 #include "ObjectID.C"
@@ -20,7 +21,7 @@ void Ex_1p1(){
 
   //load file and tree
   TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
-  TTree* t = f->Get("ljmet");
+  TTree* t = (TTree*)f->Get("ljmet");
 
   int nEntries = t->GetEntries();
   //kinematic variables
@@ -78,7 +79,7 @@ void Ex_1p1(){
   //Loop over the tree and look for an electron pair that makes a Z
   for(int ient = 0; ient < nEntries; ient++){
     t->GetEntry(ient);
-
+    if(ient % 1000 ==0) std::cout<<"Completed "<<ient<<" out of "<<nEntries<<" events"<<std::endl;
     //Put electrons back together into coherent objects
     vector <Electron*> vEl;
     for (unsigned int uiEl = 0; uiEl < elPts->size(); uiEl++){
@@ -161,9 +162,9 @@ void Ex_1p1(){
   //make new TGraph to get ratio
   TGraphAsymmErrors* etaGraph = new TGraphAsymmErrors(ssEtaHist,totEtaHist);
 
-  TCanvas c5;
+  TCanvas c4;
   etaGraph->Draw("apl");
-  c5.Print("chargeMisID_vEta.pdf");
+  c4.Print("chargeMisID_vEta.pdf");
 
   //same as above but for pt
   //make new TGraph to get ratio
