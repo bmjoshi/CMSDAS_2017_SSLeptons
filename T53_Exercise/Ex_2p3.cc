@@ -33,7 +33,7 @@ void Ex_2p3(){
   float Nff_mc;
 
   //load the 'data' and mc
-  TFile* fdata = new TFile("ljmet_tree_TT1_temp.root");
+  TFile* fdata = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
   //TFile* fmc   = new TFile("ljmet_tree_TT2.root");
 
   TTree* tdata = fdata->Get("ljmet");
@@ -71,7 +71,7 @@ void Ex_2p3(){
   //invariant mass
   //vector<double> *diElMass_data = 0;
   //kinematic variables
-  vector<double> *elpts_data = 0;
+  vector<double> *elPts = 0;
   vector<double> *elEtas_data =0;
   //variables for tracking cuts
   vector<double> *elDeta_data =0;
@@ -93,10 +93,16 @@ void Ex_2p3(){
   vector<double>* jetPts_data = 0;
   //met
   double met_data = 0;
+  //muon pt;
+  vector<double> *muPts = 0;
+  vector<double> *muEtas = 0;
+  vector<double> *muPhis = 0;
+  
+
 
   //set branch addresses
   //tdata->SetBranchAddress("diElMass_DileptonCalc", &diElMass_data);
-  tdata->SetBranchAddress("elPt_DileptonCalc", &elpts_data);
+  tdata->SetBranchAddress("elPt_DileptonCalc", &elPts);
   tdata->SetBranchAddress("elEta_DileptonCalc", &elEtas_data);
   tdata->SetBranchAddress("elDeta_DileptonCalc", &elDeta_data);
   tdata->SetBranchAddress("elDphi_DileptonCalc", &elDphi_data);
@@ -110,6 +116,9 @@ void Ex_2p3(){
   tdata->SetBranchAddress("corr_met_DileptonCalc",&met_data);
   tdata->SetBranchAddress("AK5JetPt_DileptonCalc",&jetPts_data);
   tdata->SetBranchAddress("elCharge_DileptonCalc",&elCharge_data);
+  tdata->SetBranchAddress("muPt_DileptonCalc",&muPts);
+  tdata->SetBranchAddress("muEta_DileptonCalc",&muEtas);
+  tdata->SetBranchAddress("muPhi_DileptonCalc",&muPhis);
   // tdata->SetBranchAddress("elCharge2_DileptonCalc",&elCharge2_data);
   
 
@@ -168,11 +177,6 @@ void Ex_2p3(){
     if( met_data < 100) continue;
     Nmetcut_data +=1;
 
-    //check lep1pt req
-    if(elpts_data->at(0) < 80) continue;
-
-    //check subleading lep pt req
-    if(elpts_data->at(1) < 30) continue;
 
    //require more than one jet
     if(jetPts_data->size() < 2) continue;
@@ -196,10 +200,10 @@ void Ex_2p3(){
     NHTcut_data+=1;
 
     //Put electrons back together into coherent objects and add to lepton vector
-    vector <Lepton*> vLep;
+    Electron* ele;
     for (unsigned int uiEl = 0; uiEl < elPts->size(); uiEl++){
       Electron* el = new Electron;
-      
+      Lepton * lep = el;
       el->pt                = elPts->at(uiEl);
       el->eta               = elEtas->at(uiEl);
       el->phi               = elPhis->at(uiEl);
@@ -223,10 +227,10 @@ void Ex_2p3(){
       Muon* mu = new Muon;
 
       mu->pt      = muPts->at(uiMu);
-      mu->eta     = muEtas->at(iuMu);
+      mu->eta     = muEtas->at(uiMu);
       mu->phi     = muPhis->at(uiMu);
-      mu->isLoose = muLooseIDs->at(uiMu);
-      mu->isTight = muTightIDs->at(uiMu);
+      mu->isLoose = muIsLoose>at(uiMu);
+      mu->isTight = muIsTight->at(uiMu);
       mu->isMu    = true;
 
       vLep.push_back(mu);
