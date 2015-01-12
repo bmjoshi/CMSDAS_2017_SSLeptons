@@ -356,8 +356,9 @@ void Ex_2p3(){
 	//check second lepton
 	if(vSSLep.at(1)->tight()) Ntl_ee+=1; //loose-tight event
 	else Nll_ee +=1; //loose-loose event
+      }
     }
-      //now mumu channel
+    //now mumu channel
     if(mumu){
       //check if first lepton is tight
       if(vSSLep.at(0)->tight()){
@@ -370,11 +371,11 @@ void Ex_2p3(){
 	//check second lepton
 	if(vSSLep.at(1)->tight()) Ntl_mumu+=1; //loose-tight event
 	else Nll_mumu +=1; //loose-loose event
+      }
     }
-
-
-
-
+    
+    //end event loop
+  }
 
 
   //  std::cout<<"Number of events passing dilepton cut: "<<Ndilepcut_data<<std::endl;
@@ -385,11 +386,6 @@ void Ex_2p3(){
   std::cout<<"Number of eventspassing Jetpt1 cut: "<<NJetpt1cut_data<<std::endl;
   std::cout<<"Number of eventspassing Jetpt2 cut: "<<NJetpt2cut_data<<std::endl;
   std::cout<<"Number of events passing HT cut: "<<NHTcut_data<<std::endl;
-
-
-  std::cout<<"Number of tight-tight events: "<<Ntt_data<<std::endl;
-  std::cout<<"Number of tight-loose events: "<<Ntl_data<<std::endl;
-  std::cout<<"Number of loose-loose events: "<<Nll_data<<std::endl;
 
 
 
@@ -422,12 +418,20 @@ void Ex_2p3(){
 
 
   //then, N_fp plus N_ff should equal the number of events we have with two tight leptons so let's check:
-  float N_fake = Nfp_emu + Nff_emu;
-  std::cout<<"predicted number of non-prompt events: "<<N_fake<<std::endl;
-  std::cout<<"observed number of non-prompt events: "<<Ntt_emu<<std::endl;
-  /* 
-     MONTE CARLO PART. HERE WE WANT TO APPLY ALL THE ANALYSIS CUTS AND SIMPLY SEE HOW MANY EVENTS ACTUALLY DO PASS OUR SELECTION
-   */
+  float Nfake_eemu = Nfp_emu + Nff_emu + Npf_emu;
+  float Nfake_ee = Nfp_ee + Nff_ee;
+  float Nfake_mumu = Nfp_mumu + Nff_ee;
 
-  }
+  std::cout<<"predicted number of non-prompt events in emu channel: "<<Nfake_emu<<std::endl;
+  std::cout<<"observed number of non-prompt events in emu channel: "<<Ntt_emu<<std::endl;
+
+  std::cout<<"predicted number of non-prompt events in ee channel: "<<Nfake_ee<<std::endl;
+  std::cout<<"observed number of non-prompt events in ee channel: "<<Ntt_ee<<std::endl;
+
+  std::cout<<"predicted number of non-prompt events in mumu channel: "<<Nfake_mumu<<std::endl;
+  std::cout<<"observed number of non-prompt events in mumu channel: "<<Ntt_mumu<<std::endl;
+
+
+
+    
 }
