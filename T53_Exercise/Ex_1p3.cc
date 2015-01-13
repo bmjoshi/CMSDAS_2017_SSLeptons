@@ -12,7 +12,12 @@ const double M_MU = 0.1056583715;   //Mass of muon in GeV
 const double M_Z  = 91.1876;        //Mass of Z boson
 const double dM   = 15;             //Size of window around Z
 
-double EtaWeight(double weights[],double eta)
+double EtaWeight(double* weights,double eta){
+  float fbin = fabs(-3.0-eta)/0.4;
+  std::cout<<"eta diff "<<fbin<<std::endl;
+  int bin = (int) fbin;
+  return weights[bin];
+};
 
 void Ex_1p3(){
 
@@ -20,7 +25,7 @@ void Ex_1p3(){
   /*add in charge misID rate you measured earlier, weights should conform to the following binning for eta:
     (-3.0 to -2.6, -2.6 to -2.2, -2.2 to -1.8, -1.8 to -1.4, -1.4 to -1.0, -1.0 to -0.6, -0.6 to -0.2, -0.2 to 0.2, 0.2 to 0.6, 0.6 to 1.0, 1.0 to 1.4, 1.4 to 1.8, 1.8 to 2.2, 2.2 to 2.6, 2.6 to 3.0)
    */
-  float weights[15] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+  //float weights[15] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
   //load 'data' file - in this case ttbar mc
   TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
@@ -55,6 +60,13 @@ void Ex_1p3(){
   vector<double>* jetPts = 0;
   //met
   double met = 0;
+  //muon pt;
+  vector<double> *muPts = 0;
+  vector<double> *muEtas = 0;
+  vector<double> *muPhis = 0;
+  vector<int> * muIsTight = 0;
+  vector<int> * muIsLoose = 0;
+  vector<int> * muCharge =0;
 
   //Set branch addresses
   t->SetBranchAddress("elPt_DileptonCalc", &elPts);
@@ -74,15 +86,22 @@ void Ex_1p3(){
   t->SetBranchAddress("corr_met_DileptonCalc",&met);
   t->SetBranchAddress("AK5JetPt_DileptonCalc",&jetPts);
   t->SetBranchAddress("elChargeConsistent_DileptonCalc",&elChargeConsistency);
+  t->SetBranchAddress("muPt_DileptonCalc",&muPts);
+  t->SetBranchAddress("muEta_DileptonCalc",&muEtas);
+  t->SetBranchAddress("muPhi_DileptonCalc",&muPhis);
+  t->SetBranchAddress("muIsLoose_DileptonCalc",&muIsLoose);
+  t->SetBranchAddress("muIsTight_DileptonCalc",&muIsTight);
+  t->SetBranchAddress("muCharge_DileptonCalc",&muCharge);
+
   //Histograms
   //TH1F* ssEtaHist = new TH1F("ssEtaHist","#eta",30,-3,3);
-  TH1F* osEtaHist = new TH1F("osEtaHist","#eta",30,-3,3);
+  //TH1F* osEtaHist = new TH1F("osEtaHist","#eta",30,-3,3);
 
   //TH1F* ssPtHist = new TH1F("ssPtHist","p_{T}",100,0.,200.);
-  TH1F* osPtHist = new TH1F("osPtHist","p_{T}",100,0.,200.);
+  //TH1F* osPtHist = new TH1F("osPtHist","p_{T}",100,0.,200.);
 
-  //TH1F* ssHTHist = new TH1F("ssHTHist","Weight H_{T} of charge misID events",500,0.,1500);
-  TH1F* osHTHist = new TH1F("osHTHist","H_{T} of opposite sign dilepton events",30,0.,1500);
+  TH1F* ssHTHist = new TH1F("ssHTHist","Weight H_{T} of charge misID events",40,0.,2000);
+  TH1F* osHTHist = new TH1F("osHTHist","H_{T} of opposite sign dilepton events",40,0.,2000);
 
 
   //Loop over the tree and look for an electron pair that makes a Z
@@ -116,6 +135,7 @@ void Ex_1p3(){
 
     if( HT < 700) continue;
 
+    /*
     //now make ST cut;
     float ST = HT;
     for(unsigned int uiEl = 0; uiEl < elPts->size(); uiEl++){
@@ -125,9 +145,10 @@ void Ex_1p3(){
     ST+=met;
 
     if(ST<900) continue; //ST cut
+    */
 
     //Put electrons back together into coherent objects
-    vector <Electron*> vEl;
+    vector<Electron*> vEl;
     for (unsigned int uiEl = 0; uiEl < elPts->size(); uiEl++){
       Electron* el = new Electron;
       
@@ -145,7 +166,7 @@ void Ex_1p3(){
       el->relIso            = elRelIsos->at(uiEl);
       el->sigmaIetaIeta     = elSigmaIetaIetas->at(uiEl);
       el->chargeConsistency = elChargeConsistency->at(uiEl);
-
+      
       vEl.push_back(el);
     }
 
@@ -153,12 +174,18 @@ void Ex_1p3(){
 
     //vector for tight electrons
     vector<Electron*> vTightEl;
-
+    //vector for tight leptons
+    vector<Lepton*> vTightLep;
     for(unsigned int ui = 0; ui < vEl.size(); ui++){
       //Apply tight selection to the electron
       if (!vEl.at(ui)->tight()) continue;
       //save tight leptons
       vTightEl.push_back(vEl.at(ui));
+      Lepton* lep = vEl.at(ui);
+      lep->isMu = false;
+      lep->isEl = true;
+      lep->Tight = true;
+      vTightLep.push_back(lep);
       for(unsigned int uj = ui + 1; uj < vEl.size(); uj++){
 	if (!vEl.at(uj)->tight()) continue;
 
@@ -177,20 +204,67 @@ void Ex_1p3(){
 
     if(foundPair) continue; //skip events with a Zboson
 
-    //require only two tight leptons
-    if(vTightEl.size()!=2) continue;
-    //require opposite charges
-    if(vTightEl.at(0)->charge==vTightEl.at(1)->charge) continue;
+    //make muon vector
+    vector<Muon*> vTightMu;
+    for (unsigned int uiMu = 0; uiMu <muPts->size(); uiMu++){
+      Muon* mu = new Muon;
 
+      mu->pt      = muPts->at(uiMu);
+      mu->eta     = muEtas->at(uiMu);
+      mu->phi     = muPhis->at(uiMu);
+      mu->isLoose = muIsLoose->at(uiMu);
+      mu->isTight = muIsTight->at(uiMu);
+      mu->charge  = muCharge->at(uiMu);
+      if(mu->isTight){
+	//only save tight muons
+	vTightMu.push_back(mu);
+	//make tight lepton
+	Lepton* lep = mu;
+	lep->isEl    = false;
+	lep->isMu    = true;
+	lep->Tight   = mu->tight();
+	lep->Loose   = mu->loose();
+	vTightLep.push_back(lep);
+      }
+    }
 
-    //now we can fill histograms because events have passed the cuts required
-    osEtaHist->Fill(vTightEl.at(0)->eta);
-    osEtaHist->Fill(vTightEl.at(1)->eta);
+    bool foundMuPair=false;
+    //veto events with z boson
+    for(unsigned int uimu = 0; uimu < vTightMu.size(); uimu++){
+      for(unsigned int ujmu = uimu+1; ujmu < vTightMu.size(); ujmu++){
 
-    osPtHist->Fill(vTightEl.at(0)->pt);
-    osPtHist->Fill(vTightEl.at(1)->pt);
+	TLorentzVector v1, v2;
+	v1.SetPtEtaPhiM(vTightMu.at(uimu)->pt, vTightMu.at(uimu)->eta, vTightMu.at(uimu)->phi, M_MU);
+	v2.SetPtEtaPhiM(vTightMu.at(ujmu)->pt, vTightMu.at(ujmu)->eta, vTightMu .at(ujmu)->phi, M_MU);
+	
+	double mass = (v1+v2).M();
+	if (mass > M_Z - dM && mass < M_Z + dM){
+	  foundMuPair = true;
+	}
+      }
+      if(foundMuPair) break; //no need to continue if a pair has been found	
+    }
 
-    osHTHist->Fill(HT);
+    //skip if zboson
+    if(foundMuPair) continue;
+
+    //now check for only two tight leptons
+    if(vTightLep.size()!=2) continue;
+    //check OPPOSITE sign
+    if(vTightLep.at(0)->charge==vTightLep.at(1)->charge) continue;
+
+    //check channel
+    bool ee = false;
+    bool emu = false;
+    bool mumu = false;
+
+    if(vTightLep.at(0)->isEl && vTightLep.at(1)->isEl) ee = true;
+    if(vTightLep.at(0)->isEl && vTightLep.at(1)->isMu) emu = true;
+    if(vTightLep.at(0)->isMu && vTightLep.at(1)->isEl) emu = true;
+    if(vTightLep.at(0)->isMu && vTightLep.at(1)->isMu) mumu = true;
+
+    //skip any di-mu events since we assume they don't contribute to ss via charge misID
+    if(mumu) continue;
 
     /*now we want to fill our predicted HT distribution with the os events weighted by the appropriate weights
       I've written a simple function that gives the correct element of the weight array if you pass it the eta of the electron.
@@ -199,16 +273,20 @@ void Ex_1p3(){
 
     // ADD CODE HERE TO CALCULATE PROBABLITY FOR EACH EVENT
 
-    float ee_weight = ;// fill in
-    float emu_eight = ;// fill in
+    float ee_weight = 1;// fill in
+    float emu_weight = 1;// fill in
 
     //fill HT histogram
     if(ee){
-      ssHTHist_ee->Fill(HT,ee_weight);
+      ssHTHist->Fill(HT,ee_weight);
     }
     if(emu){
-      ssHTHist_emu->Fill(HT,emu_weight);
+      ssHTHist->Fill(HT,emu_weight);
     }
+
+    //fill os hist for reference
+    osHTHist->Fill(HT);
+
     //end event loop
   }
 
@@ -216,14 +294,10 @@ void Ex_1p3(){
   osHTHist->Draw();
   c1.Print("HT_oppositeSignEvents.pdf");
 
-}
-
-
-double EtaWeight(double weights[],float eta){
-
-  float fbin = fabs(-3.0-eta)/0.4;
-  std::cout<<"eta diff "<<fbin<<std::endl;
-  int bin = (int) fbin;
-  return weights[bin];
+  TCanvas c2;
+  ssHTHist->Draw();
+  c2.Print("HT_sameSignEvents.pdf");
 
 }
+
+
