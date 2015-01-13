@@ -105,10 +105,10 @@ void Ex_1p1(){
 
     bool foundPair = false;
     for(unsigned int ui = 0; ui < vEl.size(); ui++){
-      //Apply tight selection to the electron
-      if (!vEl.at(ui)->tight()) continue;
+      // ADD CODE HERE - THE LINE BELOW DETERMINES THE QUALITY OF THE ELECTRON
+      if (!vEl.at(ui)->loose()) continue;
       for(unsigned int uj = ui + 1; uj < vEl.size(); uj++){
-	if (!vEl.at(uj)->tight()) continue;
+	if (!vEl.at(uj)->loose()) continue;
 
 	TLorentzVector v1, v2;
 	v1.SetPtEtaPhiM(vEl.at(ui)->pt, vEl.at(ui)->eta, vEl.at(ui)->phi, M_EL);
@@ -148,6 +148,10 @@ void Ex_1p1(){
 
   c1.Print("DiElectronInvariantMass_all.pdf");
 
+  /* ADD CODE TO PLOT MASS DISTRIBUTION FOR OPPOSITE SIGN AND SAME SIGN. 
+     MOST OF IT IS THERE, YOU JUST NEED TO NORMALIZE OSMASS AND SSMASS BEFORE DRAWING THEM
+   
+
   TCanvas c2;
   osmass->Draw();
 
@@ -157,21 +161,30 @@ void Ex_1p1(){
   ssmass->Draw();
   
   c3.Print("DiElectronInvariantMass_ss.pdf");
+  */
 
-  //Now draw fake rate vs eta, pt
-  //make new TGraph to get ratio
-  TGraphAsymmErrors* etaGraph = new TGraphAsymmErrors(ssEtaHist,totEtaHist);
 
+  //ADD CODE TO PRINT OUT CHARGE MISID RATE
+
+
+
+
+  /* ADD CODE HERE TO MAKE PLOTS OF THE CHARGE MISID RATE VS PT, ETA. SOME OF IT IS THERE SO THAT WE ALL HAVE THE SAME OUTPUT FILES
+     HINT: MAKE USE OF TGRAPHASYMMERRORS
+   */
+  //tcanvas for eta plot
   TCanvas c4;
-  etaGraph->Draw("apl");
+
+  //add code!
+
+
   c4.Print("chargeMisID_vEta.pdf");
 
   //same as above but for pt
-  //make new TGraph to get ratio
-  TGraphAsymmErrors* ptGraph = new TGraphAsymmErrors(ssPtHist,totPtHist);
-
   TCanvas c5;
-  ptGraph->Draw("apl");
+
+
+
   c5.Print("chargeMisID_vPt.pdf");
 
 }
