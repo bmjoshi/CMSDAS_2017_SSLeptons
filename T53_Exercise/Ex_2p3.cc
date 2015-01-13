@@ -18,7 +18,7 @@ void Ex_2p3(){
   ///PLACE TO ADD IN NUMBERS FOR PROMPT AND FAKE RATE
   float f_e  = 0.15;
   float p_e  = 1.0;
-  float f_mu = 0.3;
+  float f_mu = 0.9;
   float p_mu = 1.0;
 
   //variables we will use later based on that:
