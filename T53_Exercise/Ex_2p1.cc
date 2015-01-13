@@ -69,6 +69,7 @@ void Ex_2p1(){
   vector<double> *muPhis = 0;
   vector<int> * muIsTight = 0;
   vector<int> * muIsLoose = 0;
+  vector<int> * muCharge = 0;
 
   //set branch addresses
   tDY->SetBranchAddress("diElMass_DileptonCalc", &diElMass);
@@ -91,6 +92,7 @@ void Ex_2p1(){
   tDY->SetBranchAddress("muPhi_DileptonCalc",&muPhis);
   tDY->SetBranchAddress("muIsLoose_DileptonCalc",&muIsLoose);
   tDY->SetBranchAddress("muIsTight_DileptonCalc",&muIsTight);
+  tDY->SetBranchAddress("muCharge_DileptonCalc",&muCharge);
 
   for(int ient = 0; ient < nEntries; ient++){
     tDY->GetEntry(ient);
@@ -193,9 +195,7 @@ void Ex_2p1(){
       mu->phi     = muPhis->at(uiMu);
       mu->isLoose = muIsLoose->at(uiMu);
       mu->isTight = muIsTight->at(uiMu);
-      mu->isEl    = false;
-      mu->isMu    = true;
-
+      
       vMu.push_back(mu);
     }    
 
@@ -266,10 +266,12 @@ void Ex_2p1(){
   TGraphAsymmErrors* etagraph_ee = new TGraphAsymmErrors(numEtaHist_ee,denEtaHist_ee);
   
   TCanvas c1;
+  ptgraph_ee->GetYaxis()->SetRangeUser(0,1);
   ptgraph_ee->Draw("apl");
   c1.Print("PromptRate_v_pT_ee.pdf");
 
   TCanvas c2;
+  etagraph_ee->GetYaxis()->SetRangeUser(0,1);
   etagraph_ee->Draw("apl");
   c2.Print("PromptRate_v_Eta_ee.pdf");
 
@@ -277,10 +279,12 @@ void Ex_2p1(){
   TGraphAsymmErrors* etagraph_mumu = new TGraphAsymmErrors(numEtaHist_mumu,denEtaHist_mumu);
   
   TCanvas c3;
+  ptgraph_mumu->GetYaxis()->SetRangeUser(0,1);
   ptgraph_mumu->Draw("apl");
   c3.Print("PromptRate_v_pT_mumu.pdf");
 
   TCanvas c4;
+  etagraph_mumu->GetYaxis()->SetRangeUser(0,1);
   etagraph_mumu->Draw("apl");
   c4.Print("PromptRate_v_Eta_mumu.pdf");
 
