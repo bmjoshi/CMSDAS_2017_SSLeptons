@@ -16,9 +16,9 @@ void Ex_2p3(){
 
 
   ///PLACE TO ADD IN NUMBERS FOR PROMPT AND FAKE RATE
-  float f_e  = 0.1;
+  float f_e  = 0.15;
   float p_e  = 1.0;
-  float f_mu = 0.1;
+  float f_mu = 0.3;
   float p_mu = 1.0;
 
   //variables we will use later based on that:
@@ -145,50 +145,7 @@ void Ex_2p3(){
   tdata->SetBranchAddress("muCharge_DileptonCalc",&muCharge);
   
 
-  //LOAD THINGS FOR MC
-  /*
-  vector<double> *diElMass_mc = 0;
-  //kinematic variables
-  vector<double> *elpts_mc = 0;
-  vector<double> *elEtas_mc =0;
-  //variables for tracking cuts
-  vector<double> *elDeta_mc =0;
-  vector<double> *elDphi_mc =0;
-  //variables for primary vtx cuts
-  vector<double> *elDZs_mc = 0;
-  vector<double> *elD0s_mc = 0;
-  // H over E
-  vector<double> *elHoverEs_mc = 0;
-  //missing hits
-  vector<int> *elMHits_mc = 0;
-  //ooemoop
-  vector<double> *elOoEmooPs_mc = 0;
-  //charged isolation
-  vector<double> *elRelIsos_mc = 0;
-  //sigmaIetaIeta
-  vector<double>* elSigmaIetaIetas_mc = 0;
-
-  //set branch addresses
-  //tmc->SetBranchAddress("diElMass_DileptonCalc", &diElMass_mc);
-  //tmc->SetBranchAddress("elPt_DileptonCalc", &elpts_mc);
-  //tmc->SetBranchAddress("elEta_DileptonCalc", &elEtas_mc);
-  //tmc->SetBranchAddress("elDeta_DileptonCalc", &elDeta_mc);
-  //tmc->SetBranchAddress("elDphi_DileptonCalc", &elDphi_mc);
-  //tmc->SetBranchAddress("elDZ_DileptonCalc", &elDZs_mc);
-  //tmc->SetBranchAddress("elD0_DileptonCalc", &elD0s_mc);
-  //tmc->SetBranchAddress("elHoE_DileptonCalc",&elHoverEs_mc);
-  //tmc->SetBranchAddress("elMHits_DileptonCalc",&elMHits_mc);
-  //tmc->SetBranchAddress("elOoemoop_DileptonCalc",&elOoEmooPs_mc);
-  //tmc->SetBranchAddress("elRelIso_DileptonCalc",&elRelIsos_mc);
-  //tmc->SetBranchAddress("elSihih_DileptonCalc",&elSigmaIetaIetas_mc);
-  */
-
-  /*
-    DATA PROCEDURE: WE JUST DO THE ANALYSIS BUT GET NUMBERS FOR HOW MANY LOOSE
-    AND HOW MANY TIGHT LEPTONS THERE ARE
-   */
-
-  //event loop - plots to produce: HT distribution for all cuts except 
+  //event loop
   for(int ient = 0; ient < nEntries; ient++){
     if(ient % 1000 ==0) std::cout<<"Completed "<<ient<<" out of "<<nEntries<<" events"<<std::endl;
     tdata->GetEntry(ient);
@@ -259,6 +216,7 @@ void Ex_2p3(){
       mu->phi     = muPhis->at(uiMu);
       mu->isLoose = muIsLoose->at(uiMu);
       mu->isTight = muIsTight->at(uiMu);
+      mu->charge  = muCharge->at(uiMu);
 
       Lepton* lep = mu;
       lep->isEl    = false;
@@ -307,26 +265,15 @@ void Ex_2p3(){
     vector<Lepton*> vSSLep;
 
     for(unsigned int uiLep = 0; uiLep<vLep.size(); uiLep++){
-      //make sure lepton at least passes loose requirement
-      if( vLep.at(uiLep)->isEl){
-	if(! ( vLep.at(uiLep)->Tight || vLep.at(uiLep)->Loose)) continue;
-      }
-      else{ //is muon
-	if(! ( vLep.at(uiLep)->Tight || vLep.at(uiLep)->Loose)) continue;
-      }
+      if(! ( vLep.at(uiLep)->Tight || vLep.at(uiLep)->Loose)) continue;
       //get charge
       int charge1 = vLep.at(uiLep)->charge;
       for(unsigned int ujLep = uiLep+1; ujLep < vLep.size(); ujLep++){
 	//make sure second lepton is at least loose
-	if( vLep.at(ujLep)->isEl){
-	  if(! ( vLep.at(ujLep)->Tight || vLep.at(ujLep)->Loose)) continue;
-	}
-	else{ //is muon
-	  if(! ( vLep.at(ujLep)->Tight || vLep.at(ujLep)->Loose)) continue;
-	}	
-	
+	if(! ( vLep.at(ujLep)->Tight || vLep.at(ujLep)->Loose)) continue;
 	if( charge1 == vLep.at(ujLep)->charge) samesign = true;
 	if(samesign){
+	  //	  std::cout<<"found samesign event"<<std::endl;
 	  vSSLep.push_back(vLep.at(uiLep));
 	  vSSLep.push_back(vLep.at(ujLep));
 	}
@@ -352,6 +299,7 @@ void Ex_2p3(){
 
     //now get lepton id information
     if(emu){
+
       //check flavor of first lepton
       if(vSSLep.at(0)->isEl){
 	//check if first lepton is tight
