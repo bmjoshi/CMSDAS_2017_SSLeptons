@@ -31,6 +31,7 @@ void Ex_1p3(){
   TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
   TTree* t = (TTree*)f->Get("ljmet");
 
+
   int nEntries = t->GetEntries();
   //kinematic variables
   vector<double> *elPts = 0;
@@ -297,6 +298,17 @@ void Ex_1p3(){
   TCanvas c2;
   ssHTHist->Draw();
   c2.Print("HT_sameSignEvents.pdf");
+
+  //finally let's save our predictions to a root file for ease of use later
+  TFile* fbg = new TFile("bg_chargeMisID.root","RECREATE");
+  TTree* T = new TTree("T","test");
+  T->Branch("osHTHist","TH1F",&osHTHist,32000,0);
+  T->Branch("ssHTHist","TH1F",&ssHTHist,32000,0);
+  T->Fill();
+  T->Print();
+  fbg->Write();
+  fbg->Close();
+
 
 }
 
