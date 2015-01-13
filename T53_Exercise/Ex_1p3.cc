@@ -25,6 +25,7 @@ void Ex_1p3(){
   /*add in charge misID rate you measured earlier, weights should conform to the following binning for eta:
     (-3.0 to -2.6, -2.6 to -2.2, -2.2 to -1.8, -1.8 to -1.4, -1.4 to -1.0, -1.0 to -0.6, -0.6 to -0.2, -0.2 to 0.2, 0.2 to 0.6, 0.6 to 1.0, 1.0 to 1.4, 1.4 to 1.8, 1.8 to 2.2, 2.2 to 2.6, 2.6 to 3.0)
    */
+  //uncomment when ready to use
   //float weights[15] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
   //load 'data' file - in this case ttbar mc
