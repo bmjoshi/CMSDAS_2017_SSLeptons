@@ -260,7 +260,7 @@ void Ex_1p2(){
 
      N_events / cross section = 5.0
 
-     But, you will find that this is not always the case. NOTE: This equation is not true because we are forcing the events to be normalized to 5 inverse femtobarns.
+     NOTE: This equation is not currently true because we are forcing the events to be normalized to 5 inverse femtobarns.
      To make this equation true we will introduce a weight W_WZ for instance, which will make our equation true. What we really want then is to weight N_events as below:
 
      N_normalized = Weight_Sample * N_RunSample
@@ -589,4 +589,8 @@ void Ex_1p2(){
   std::cout<<"Number of same-sign events passing mass window cut from WJets: "<<nSSNormWJets<<std::endl;
   std::cout<<"Number of same-sign events passing mass window cut from TT: "<<nSSNormTT<<std::endl;
   std::cout<<"Number of same-sign events passing mass window cut from TTZ: "<<nSSNormTTZ<<std::endl;
+
+  /*ADD CODE TO PRINT OUT THE TOTAL PURITY YOU WILL HAVE TO DEFINE YOUR OWN VARIABLES AND PRINT THEM OUT. 
+   YOU PROBABLY WANT ONE FOR TOTAL EVENTS AND ONE FOR NON DY EVENTS*/
+
 }
