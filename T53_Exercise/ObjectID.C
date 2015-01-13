@@ -1,11 +1,24 @@
-class Electron {
+
+class Lepton {
 public:
+  
   //Four vector
   double pt;
   double eta;
   double phi;
 
   int charge;
+
+  bool isEl;
+  bool isMu;
+
+  bool Tight;
+  bool Loose;
+};
+
+
+class Electron : public Lepton{
+public:
   
   //variables for tracking cuts
   double dEta; 
@@ -22,9 +35,6 @@ public:
   double relIso;
   double sigmaIetaIeta;
   int    chargeConsistency;
-
-  bool isEl;
-  bool isMu;
 
   bool tight(){
     //Barrel
@@ -110,23 +120,16 @@ public:
     sigmaIetaIeta = -100;
     
     chargeConsistency = 0;
-    isEl = false;
-    isMu = false;
+
   }
 
 };
 
-class Muon{
+class Muon : public Lepton{
 public:
-  //Four vector
-  double pt;
-  double eta;
-  double phi;
-  int charge;
+
   int isLoose;
   int isTight;
-  bool isEl;
-  bool isMu;
 
   bool tight(){
     if(!isTight) return false;
@@ -149,12 +152,6 @@ public:
 
     isLoose = -1;
     isTight = -1;
-    isEl = false;
-    isMu = false;
+
   }
-};
-
-class Lepton : public Electron, public Muon{
-public:
-
 };
