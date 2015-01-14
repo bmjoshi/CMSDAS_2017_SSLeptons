@@ -5,6 +5,7 @@
 #include "ObjectID.C"
 #include <vector>
 #include "TLorentzVector.h"
+#include "TChain.h"
 
 const double M_EL = 0.000510998928; //Mass of electron in GeV
 const double M_MU = 0.1056583715;   //Mass of muon in GeV
@@ -16,9 +17,9 @@ void Ex_2p3(){
 
 
   ///PLACE TO ADD IN NUMBERS FOR PROMPT AND FAKE RATE
-  float f_e  = 0.15;
-  float p_e  = 1.0;
-  float f_mu = 0.9;
+  float f_e  = 0.36;
+  float p_e  = 0.8;
+  float f_mu = 0.97;
   float p_mu = 1.0;
 
   //variables we will use later based on that:
@@ -36,12 +37,18 @@ void Ex_2p3(){
   float Nfp_mumu=0;
   float Nff_mumu=0;
 
-  //load the 'data' and mc
-  TFile* fdata = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
-  //TFile* fmc   = new TFile("ljmet_tree_TT2.root");
+  //make tchain
+  TChain* tdata = new TChain("ljmet");
+  
+  //add files to tchain
+  tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
+  tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_WZ.root");
+  tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_WJets.root");
+  tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
+  tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_TTZ.root");
 
-  TTree* tdata = (TTree*)fdata->Get("ljmet");
-  //  TTree* tmc   = fmc->Get("ljmet");
+
+
 
 
   // LOAD THINGS FOR DATA
@@ -407,8 +414,6 @@ void Ex_2p3(){
 
 
 
-  std::cout<<"Nfp_emu_pass: "<<Nfp_emu<<std::endl;
-  std::cout<<"Nff_emu_pass: "<<Nff_emu<<std::endl;
 
 
   //then, N_fp plus N_ff should equal the number of events we have with two tight leptons so let's check:
@@ -416,14 +421,16 @@ void Ex_2p3(){
   float Nfake_ee = Nfp_ee + Nff_ee;
   float Nfake_mumu = Nfp_mumu + Nff_ee;
 
+
+
   std::cout<<"predicted number of non-prompt events in emu channel: "<<Nfake_emu<<std::endl;
-  std::cout<<"observed number of non-prompt events in emu channel: "<<Ntt_emu<<std::endl;
+
 
   std::cout<<"predicted number of non-prompt events in ee channel: "<<Nfake_ee<<std::endl;
-  std::cout<<"observed number of non-prompt events in ee channel: "<<Ntt_ee<<std::endl;
+
 
   std::cout<<"predicted number of non-prompt events in mumu channel: "<<Nfake_mumu<<std::endl;
-  std::cout<<"observed number of non-prompt events in mumu channel: "<<Ntt_mumu<<std::endl;
+
 
 
 
