@@ -271,11 +271,11 @@ void Ex_1p2(){
 
   //To start, look up the cross sections for the various samples in MCFM and fill them out below:
 
-  float xsecDY = 1.0;
-  float xsecWZ = 1.0;
-  float xsecWJets = 1.0;
-  float xsecTT = 1.0;
-  float xsecTTZ = 1.0;
+  float xsecDY = 4746*1000;
+  float xsecWZ = 1.634*1000;
+  float xsecWJets = 50100*1000;
+  float xsecTT = 491.2*1000;
+  float xsecTTZ = 2.232*1000;
 
   //Here some math is done for you :)
 
