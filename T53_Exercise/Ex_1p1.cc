@@ -7,6 +7,7 @@
 #include "TGraphAsymmErrors.h"
 #include "ObjectID.C"
 #include "TLorentzVector.h"
+#include "TChain.h"
 
 const double M_EL = 0.000510998928; //Mass of electron in GeV
 const double M_MU = 0.1056583715;   //Mass of muon in GeV
@@ -20,8 +21,10 @@ void Ex_1p1(){
   */
 
   //load file and tree
-  TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
-  TTree* t = (TTree*)f->Get("ljmet");
+  TChain* t = new TChain("ljmet");
+  t->Add("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
+  //t->Add("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
+  
 
   int nEntries = t->GetEntries();
   //kinematic variables
@@ -106,9 +109,9 @@ void Ex_1p1(){
     bool foundPair = false;
     for(unsigned int ui = 0; ui < vEl.size(); ui++){
       // ADD CODE HERE - THE LINE BELOW DETERMINES THE QUALITY OF THE ELECTRON
-      if (!vEl.at(ui)->loose()) continue;
+      if (!vEl.at(ui)->tight()) continue;
       for(unsigned int uj = ui + 1; uj < vEl.size(); uj++){
-	if (!vEl.at(uj)->loose()) continue;
+	if (!vEl.at(uj)->tight()) continue;
 
 	TLorentzVector v1, v2;
 	v1.SetPtEtaPhiM(vEl.at(ui)->pt, vEl.at(ui)->eta, vEl.at(ui)->phi, M_EL);
@@ -150,7 +153,7 @@ void Ex_1p1(){
 
   /* ADD CODE TO PLOT MASS DISTRIBUTION FOR OPPOSITE SIGN AND SAME SIGN. 
      MOST OF IT IS THERE, YOU JUST NEED TO NORMALIZE OSMASS AND SSMASS BEFORE DRAWING THEM
-   
+  */ 
 
   TCanvas c2;
   osmass->Draw();
@@ -161,13 +164,13 @@ void Ex_1p1(){
   ssmass->Draw();
   
   c3.Print("DiElectronInvariantMass_ss.pdf");
-  */
+  
 
 
   //ADD CODE TO PRINT OUT CHARGE MISID RATE
 
 
-
+  std::cout<<"fake rate: "<< ssmass->Integral() /  allmass->Integral()<<std::endl;
 
   /* ADD CODE HERE TO MAKE PLOTS OF THE CHARGE MISID RATE VS PT, ETA. SOME OF IT IS THERE SO THAT WE ALL HAVE THE SAME OUTPUT FILES
      HINT: MAKE USE OF TGRAPHASYMMERRORS
