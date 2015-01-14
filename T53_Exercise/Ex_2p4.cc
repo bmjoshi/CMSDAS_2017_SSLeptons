@@ -12,7 +12,7 @@ const double M_Z  = 91.1876;        //Mass of Z boson
 const double dM   = 15;             //Size of window around Z
 
 
-void Ex_2p3(){
+void Ex_2p4(){
 
 
   ///PLACE TO ADD IN NUMBERS FOR PROMPT AND FAKE RATE
