@@ -25,7 +25,7 @@ void Ex_1p3(){
   /*add in charge misID rate you measured earlier, weights should conform to the following binning for eta:
     (-3.0 to -2.6, -2.6 to -2.2, -2.2 to -1.8, -1.8 to -1.4, -1.4 to -1.0, -1.0 to -0.6, -0.6 to -0.2, -0.2 to 0.2, 0.2 to 0.6, 0.6 to 1.0, 1.0 to 1.4, 1.4 to 1.8, 1.8 to 2.2, 2.2 to 2.6, 2.6 to 3.0)
    */
-  //float weights[15] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+  double weights[15] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
   //load 'data' file - in this case ttbar mc
   TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
@@ -277,7 +277,7 @@ void Ex_1p3(){
 
     // ADD CODE HERE TO CALCULATE PROBABLITY FOR EACH EVENT
 
-    float ee_weight = 1;// fill in
+    float ee_weight = EtaWeight(weights,vTightLep.at(0)->eta);// fill in
     float emu_weight = 1;// fill in
 
     //fill HT histogram
