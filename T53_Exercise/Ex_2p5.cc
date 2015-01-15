@@ -144,7 +144,7 @@ void Ex_2p5(){
       HT+= fabs(jetPts->at(ijet));
     }
 
-    if( HT < 800) continue;
+    if( HT < 700) continue;
     NHTcut+=1;
 
     //Put electrons back together into coherent objects and add to lepton vector
