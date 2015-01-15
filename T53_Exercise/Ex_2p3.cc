@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include "TFile.h"
 #include "TTree.h"
@@ -47,15 +48,28 @@ void Ex_2p3(){
   tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
   tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_TTZ.root");
 
-
+  //output file
+  TFile* fbg = new TFile("bg_nonPrompt.root","RECREATE");
 
 
 
   // LOAD THINGS FOR DATA
   //histograms
-  TH1F* ttHThist = new TH1F("ttHThist","H_{T} for events with two tight leptons",200,1000.,2000);
-  TH1F* tlHThist = new TH1F("tlHThist","H_{T} for events with one tight and one loose leptons",200,1000.,2000);
-  TH1F* llHThist = new TH1F("llHThist","H_{T} for events with two loose leptons",200,1000.,2000);
+  TH1F* HTtt_emu = new TH1F("HTtt_emu","H_{T} for events with two tight leptons",40,0,2000);
+  TH1F* HTlt_emu = new TH1F("HTlt_emu","H_{T} for events with one tight and one loose leptons",40,0,2000);
+  TH1F* HTtl_emu = new TH1F("HTtl_emu","H_{T} for events with one tight and one loose",40,0,2000);
+  TH1F* HTll_emu = new TH1F("HTll_emu","H_{T} for events with two loose leptons",40,0,2000);
+
+  TH1F* HTtt_mumu = new TH1F("HTtt_mumu","H_{T} for events with two tight leptons",40,0,2000);
+  TH1F* HTtl_mumu = new TH1F("HTtl_mumu","H_{T} for events with one tight and one loose leptons",40,0,2000);
+  TH1F* HTll_mumu = new TH1F("HTll_mumu","H_{T} for events with two loose leptons",40,0,2000);
+
+  TH1F* HTtt_ee = new TH1F("HTtt_ee","H_{T} for events with two tight leptons",40,0,2000);
+  TH1F* HTtl_ee = new TH1F("HTtl_ee","H_{T} for events with one tight and one loose leptons",40,0,2000);
+  TH1F* HTll_ee = new TH1F("HTll_ee","H_{T} for events with two loose leptons",40,0,2000);
+
+
+
 
   //count of events with tight/loose leptons
   int Ntt_ee = 0;
@@ -179,11 +193,11 @@ void Ex_2p3(){
 
     //check HT req
     float HT = 0;
-    for(int ijet = 0; ijet<jetPts->size(); ijet++){
+    for(unsigned int ijet = 0; ijet<jetPts->size(); ijet++){
       HT+= fabs(jetPts->at(ijet));
     }
 
-    if( HT < 800) continue;
+    if( HT < 700) continue;
     NHTcut+=1;
 
     //Put electrons back together into coherent objects and add to lepton vector
@@ -312,18 +326,28 @@ void Ex_2p3(){
 	//check if first lepton is tight
 	if(vSSLep.at(0)->Tight){
 	  //check if second  is
-	  if(vSSLep.at(1)->Tight) Ntt_emu +=1;
+	  if(vSSLep.at(1)->Tight){
+	    Ntt_emu +=1;
+	    HTtt_emu->Fill(HT);
+	  }
 	  //if second isn't tight, it must be loose (requirement for leptons to be put in sslep vector)
 	  else{
 	    Ntl_emu+=1; // we know the electron is tight and muon is loose
+	    HTtl_emu->Fill(HT);
 	  }
 	}
 	//now, we have first lepton is loose electron
 	else{
 	  //check for second lepton being tight
-	  if(vSSLep.at(1)->Tight) Nlt_emu+=1;
-	  //else we have two loose leptons
-	  else Nll_emu+=1;
+	  if(vSSLep.at(1)->Tight){
+	    Nlt_emu+=1;
+	    HTlt_emu->Fill(HT);
+	  }
+	    //else we have two loose leptons
+	  else {
+	    Nll_emu+=1;
+	    HTll_emu->Fill(HT);   
+	  }
 	}
       }
       //now handle case if first lepton is muon
@@ -331,14 +355,26 @@ void Ex_2p3(){
 	//check for first lepton to be tight
 	if(vSSLep.at(0)->Tight){
 	  //check for second lepton to be tight
-	  if(vSSLep.at(1)->Tight) Ntt_emu +=1; //note that this case is not overcounting with Ntt_emu above because we are preserving order of leptons
-	  else Nlt_emu+=1; //still required muon to be tight, so lt event
+	  if(vSSLep.at(1)->Tight){ 
+	    Ntt_emu +=1; //note that this case is not overcounting with Ntt_emu above because we are preserving order of leptons
+	    HTtt_emu->Fill(HT);
+	  }
+	  else {
+	    Nlt_emu+=1; //still required muon to be tight, so lt event
+	    HTlt_emu->Fill(HT);
+	  }
 	}
 	//now handle when first lepton is loose muon
 	else{
 	  //check if electron is tight
-	  if(vSSLep.at(1)->Tight) Ntl_emu +=1;
-	  else Nll_emu+=1; //again, not overcounting with above because we preserve order of leptons
+	  if(vSSLep.at(1)->Tight) {
+	    Ntl_emu +=1;
+	    HTtl_emu->Fill(HT);
+	  }
+	  else {
+	    Nll_emu+=1; //again, not overcounting with above because we preserve order of leptons
+	    HTll_emu->Fill(HT);
+	  }
 	}
       }
     } //end emu channel
@@ -349,32 +385,59 @@ void Ex_2p3(){
       //check if first lepton is tight
       if(vSSLep.at(0)->Tight){
 	//check second lepton
-	if(vSSLep.at(1)->Tight) Ntt_ee +=1; //tight-tight event
-	else Ntl_ee+=1; //tight-loose event
+	if(vSSLep.at(1)->Tight){
+	  Ntt_ee +=1; //tight-tight event
+	  HTtt_ee->Fill(HT);
+	}
+	else {
+	  Ntl_ee+=1; //tight-loose event
+	  HTtl_ee->Fill(HT);
+	}
       }
       //now if first lepton is loose
       else {
 	//check second lepton
-	if(vSSLep.at(1)->Tight) Ntl_ee+=1; //loose-tight event
-	else Nll_ee +=1; //loose-loose event
+	if(vSSLep.at(1)->Tight) {
+	  Ntl_ee+=1; //loose-tight event
+	  HTtl_ee->Fill(HT);
+	}
+	else{
+	  Nll_ee +=1; //loose-loose event
+	  HTll_ee->Fill(HT);
+	}
       }
     }
-    //now mumu channel
+
+    //now ee channel
     if(mumu){
       //check if first lepton is tight
       if(vSSLep.at(0)->Tight){
 	//check second lepton
-	if(vSSLep.at(1)->Tight) Ntt_mumu +=1; //tight-tight event
-	else Ntl_mumu+=1; //tight-loose event
+	if(vSSLep.at(1)->Tight){
+	  Ntt_mumu +=1; //tight-tight event
+	  HTtt_mumu->Fill(HT);
+	}
+	else {
+	  Ntl_mumu+=1; //tight-loose event
+	  HTtl_mumu->Fill(HT);
+	}
       }
       //now if first lepton is loose
       else {
 	//check second lepton
-	if(vSSLep.at(1)->Tight) Ntl_mumu+=1; //loose-tight event
-	else Nll_mumu +=1; //loose-loose event
+	if(vSSLep.at(1)->Tight) {
+	  Ntl_mumu+=1; //loose-tight event
+	  HTtl_mumu->Fill(HT);
+	}
+	else{
+	  Nll_mumu +=1; //loose-loose event
+	  HTll_mumu->Fill(HT);
+	}
       }
     }
     
+
+
     //end event loop
   }
 
@@ -390,8 +453,7 @@ void Ex_2p3(){
 
 
 
-  //NOW CONVERT THESE INTO HOW MANY PASSING EVENTS ARE FROM BACKGROUND WITHOUT A PROMPT LEPTON
-  
+  //CONVERT TO NUMBER OF EVENTS PREDICTED FROM EACH BACKGROUND SOURCE
 
   //emu channel
   Npf_emu = ( eps_mu / ( (1-eps_e*eta_e) * ( 1 - eps_mu *eta_mu))) * ( (-eps_e * Nll_emu) + (Ntl_emu) + (eps_e * eta_mu * Nlt_emu) - (eta_mu*Ntt_emu));
@@ -414,7 +476,39 @@ void Ex_2p3(){
 
 
 
+  //scale histograms by contribution rate;
+  TH1F* HT_emu = new TH1F("HT_emu","HT electron-muon",40,0.,2000);
+  for(int i = 1; i <= HT_emu->GetNbinsX(); i++){
+    //loop over all bins in tl, tt, lt histograms and fill ht bin with them * weights from formulas
+    float pf_ht = ( eps_mu / ( (1-eps_e*eta_e) * ( 1 - eps_mu *eta_mu))) * ( (-eps_e * HTll_emu->GetBinContent(i)) + (HTlt_emu->GetBinContent(i)) + (eps_e * eta_mu * HTlt_emu->GetBinContent(i)) - (eta_mu*HTtt_emu->GetBinContent(i))); 
+    float fp_ht = ( eps_e / ( (1-eps_e*eta_e) * ( 1 - eps_mu *eta_mu))) * ( (-eps_mu * HTll_emu->GetBinContent(i)) + (eta_e * eps_mu * HTlt_emu->GetBinContent(i)) + (HTlt_emu->GetBinContent(i)) - (eta_e*HTtt_emu->GetBinContent(i)) );
+    float ff_ht =( (eps_mu * eps_e) / ( (1 - eps_e*eta_e)*(1 - eps_mu*eta_mu))) * ( (HTll_emu->GetBinContent(i)) - (eta_e*HTlt_emu->GetBinContent(i)) - (eta_mu*HTlt_emu->GetBinContent(i)) + (eta_e*eta_mu*HTtt_emu->GetBinContent(i)));
 
+    float weighted_ht = pf_ht + fp_ht + ff_ht;
+    HT_emu->SetBinContent(i,weighted_ht);
+  }
+
+  TH1F* HT_ee = new TH1F("HT_ee","HT di-electron",40,0.,2000);
+  for(int i = 0; i<=HTtt_ee->GetNbinsX(); i++){
+    float fp_ht =  ( (eps_e) / ( pow( 1 - (eps_e*eta_e),2))) * ( (-2*eps_e*HTll_ee->GetBinContent(i)) + (fabs(1+eps_e*eta_e)*HTtl_ee->GetBinContent(i)) - (2*eta_e*HTtt_ee->GetBinContent(i)));
+    float ff_ht = (pow( (eps_e) / (1- (eps_e*eta_e)),2)) * ( (HTll_ee->GetBinContent(i)) - (eta_e*HTtl_ee->GetBinContent(i)) + (eta_e*eta_e*HTtt_ee->GetBinContent(i)));
+    float weighted_ht = ff_ht+fp_ht;
+    HT_ee->SetBinContent(i,weighted_ht);
+  }
+
+  TH1F* HT_mumu = new TH1F("HT_mumu","HT di-electron",40,0.,2000);
+  for(int i = 0; i<=HTtt_mumu->GetNbinsX(); i++){
+    float fp_ht =  ( (eps_mu) / ( pow( 1 - (eps_mu*eta_mu),2))) * ( (-2*eps_mu*HTll_mumu->GetBinContent(i)) + (fabs(1+eps_mu*eta_mu)*HTtl_mumu->GetBinContent(i)) - (2*eta_mu*HTtt_mumu->GetBinContent(i)));
+    float ff_ht = (pow( (eps_mu) / (1- (eps_mu*eta_mu)),2)) * ( (HTll_mumu->GetBinContent(i)) - (eta_mu*HTtl_mumu->GetBinContent(i)) + (eta_mu*eta_mu*HTtt_mumu->GetBinContent(i)));
+    float weighted_ht = ff_ht+fp_ht;
+    HT_mumu->SetBinContent(i,weighted_ht);
+  }
+
+  //now make total HT plot
+  TH1F* HT_nonPrompt = new TH1F("HT_nonPrompt","HT from prompt-fake and fake-fake events",40,0.,2000);
+  HT_nonPrompt->Add(HT_emu);
+  HT_nonPrompt->Add(HT_ee);
+  HT_nonPrompt->Add(HT_mumu);
 
   //then, N_fp plus N_ff should equal the number of events we have with two tight leptons so let's check:
   float Nfake_emu = Nfp_emu + Nff_emu + Npf_emu;
@@ -432,7 +526,8 @@ void Ex_2p3(){
   std::cout<<"predicted number of non-prompt events in mumu channel: "<<Nfake_mumu<<std::endl;
 
 
-
+  fbg->Write();
+  fbg->Close();
 
     
 }
