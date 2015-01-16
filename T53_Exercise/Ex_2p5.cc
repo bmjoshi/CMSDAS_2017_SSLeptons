@@ -25,13 +25,26 @@ void Ex_2p5(){
   //output file
   TFile* fsig = new TFile("sig_HT.root","RECREATE");
 
-
+  // FYI: Number for right handed events is 31395, number for left handed events is 31740
 
 
   // LOAD THINGS FOR DATA
   //histograms
   TH1F* HTHist = new TH1F("HTHist","H_{T} for events with two tight leptons",40,0.,2000);
 
+
+  TH1F* leadlep_pt = new TH1F("leadlep_pt","leading lepton pt",100,0,1000);
+  TH1F* sublep_pt = new TH1F("sublep_pt","subleading lepton pt",100,0,1000);
+
+  TH1F* leadjet_pt = new TH1F("leadjet_pt","leading jet pt",100,0,1000);
+  TH1F* subjet_pt = new TH1F("subjet_pt","sub-leading jet pt",100,0,1000);
+
+  TH1F* met_h = new TH1F("met_h","MET",100,0,1000);
+  TH1F* HT_h = new TH1F("HT_h","HT",50,0,2000);
+
+  TH1F* dilep_mass = new TH1F("dilep_mass","DilepMasss",120,0,1200);
+  TH1F* njets = new TH1F("njets","Number of Jets",10,0,10);
+  TH1F* TriMass = new TH1F("TriMass","Mass of leptons and Closest Jet",120,0,1200);
 
   //count events for each cut
   int Nmasscut=0;
@@ -42,7 +55,7 @@ void Ex_2p5(){
   int NJetscut=0;
   int NJetpt2cut=0;
   int NJetpt1cut=0;
-
+  int N_all=0;
  
 
   //initialize variables
@@ -76,6 +89,8 @@ void Ex_2p5(){
   vector<int>* elChargeConsistency = 0;
   //jets
   vector<double>* jetPts = 0;
+  vector<double>* jetEtas = 0;
+  vector<double>* jetPhis = 0;
   //met
   double met = 0;
   //muon pt;
@@ -85,6 +100,16 @@ void Ex_2p5(){
   vector<int> * muIsTight = 0;
   vector<int> * muIsLoose = 0;
   vector<int> * muCharge =0;
+
+  vector<int>    *global = 0;
+  vector<double> *chi2 = 0;
+  vector<int>    *nValMuHits = 0;
+  vector<int>    *nMatchedStations = 0;
+  vector<double> *dxy = 0;
+  vector<double> *dz = 0;
+  vector<int>    *nValPixelHits = 0;
+  vector<int>    *nTrackerLayers = 0;
+  vector<double> *relIso = 0;
 
 
   //set branch addresses
@@ -103,6 +128,8 @@ void Ex_2p5(){
   tsig->SetBranchAddress("elSihih_DileptonCalc",&elSigmaIetaIetas);
   tsig->SetBranchAddress("corr_met_DileptonCalc",&met);
   tsig->SetBranchAddress("AK5JetPt_DileptonCalc",&jetPts);
+  tsig->SetBranchAddress("AK5JetPhi_DileptonCalc",&jetPhis);
+  tsig->SetBranchAddress("AK5JetEta_DileptonCalc",&jetEtas);
   tsig->SetBranchAddress("elCharge_DileptonCalc",&elCharge);
   tsig->SetBranchAddress("elChargeConsistent_DileptonCalc",&elChargeConsistency);
   tsig->SetBranchAddress("muPt_DileptonCalc",&muPts);
@@ -111,6 +138,16 @@ void Ex_2p5(){
   tsig->SetBranchAddress("muIsLoose_DileptonCalc",&muIsLoose);
   tsig->SetBranchAddress("muIsTight_DileptonCalc",&muIsTight);
   tsig->SetBranchAddress("muCharge_DileptonCalc",&muCharge);
+
+  tsig->SetBranchAddress("muGlobal_DileptonCalc",&global);
+  tsig->SetBranchAddress("muChi2_DileptonCalc",&chi2);
+  tsig->SetBranchAddress("muNValMuHits_DileptonCalc",&nValMuHits);
+  tsig->SetBranchAddress("muNMatchedStations_DileptonCalc",&nMatchedStations);
+  tsig->SetBranchAddress("muDxy_DileptonCalc",&dxy);
+  tsig->SetBranchAddress("muDz_DileptonCalc",&dz);
+  tsig->SetBranchAddress("muNValPixelHits_DileptonCalc",&nValPixelHits);
+  tsig->SetBranchAddress("muNTrackerLayers_DileptonCalc",&nTrackerLayers);
+  tsig->SetBranchAddress("muRelIso_DileptonCalc",&relIso);
   
 
   //event loop
@@ -122,7 +159,7 @@ void Ex_2p5(){
       cuts first in order to speed things up.
      */
     //check met req
-    if( met < 100) continue;
+    if( met < 130) continue;
     Nmetcut +=1;
 
 
@@ -131,11 +168,11 @@ void Ex_2p5(){
     NJetscut +=1;
 
     //check for high pt jet
-    if(jetPts->at(0) < 150) continue;
+    if(jetPts->at(0) < 240) continue;
     NJetpt1cut+=1;
 
     //check for second jet
-    if(jetPts->at(1) < 50) continue;
+    if(jetPts->at(1) < 140) continue;
     NJetpt2cut+=1;
 
     //check HT req
@@ -186,11 +223,22 @@ void Ex_2p5(){
       mu->isTight = muIsTight->at(uiMu);
       mu->charge  = muCharge->at(uiMu);
 
+      mu->global           = global->at(uiMu);
+      mu->chi2             = chi2->at(uiMu);
+      mu->nValMuHits       = nValMuHits->at(uiMu);
+      mu->nMatchedStations = nMatchedStations->at(uiMu);
+      mu->dxy              = dxy->at(uiMu);
+      mu->dz               = dz->at(uiMu);
+      mu->nValPixelHits    = nValPixelHits->at(uiMu);
+      mu->nTrackerLayers   = nTrackerLayers->at(uiMu);
+      mu->relIso           = relIso->at(uiMu);
+
+
       Lepton* lep = mu;
       lep->isEl    = false;
       lep->isMu    = true;
-      lep->Tight   = mu->tight();
-      lep->Loose   = mu->loose();
+      lep->Tight   = mu->cutBasedTight();
+      lep->Loose   = mu->cutBasedLoose();
       vLep.push_back(lep);
     }
 
@@ -256,6 +304,79 @@ void Ex_2p5(){
     
     //skip event without same sign leptons
     if(!samesign) continue;
+
+    //cut harder on lepton pt
+    float temp_pt = 0;
+    for(unsigned int i = 0; i < vSSLep.size();i++){
+      if(vSSLep.at(i)->pt > temp_pt) temp_pt = vSSLep.at(i)->pt;
+    }
+    //check to make sure hardest lepton is above 100 GeV
+    if(temp_pt<140) continue;
+
+    //check second leading lepton
+
+    float sec_pt = 0;
+    unsigned int lep2 = 0;
+    for(unsigned int i = 0 ; i < vSSLep.size(); i++){
+      if((vSSLep.at(i)->pt > sec_pt) && (vSSLep.at(i)->pt!=temp_pt)){
+	lep2 = 0;
+    sec_pt = vSSLep.at(i)->pt;
+      }
+    }
+
+    //check second lepton pt
+    if(sec_pt<100) continue;
+
+    leadlep_pt->Fill(temp_pt);
+    sublep_pt->Fill(sec_pt);
+    leadjet_pt->Fill(jetPts->at(0));
+    subjet_pt->Fill(jetPts->at(1));
+
+    met_h->Fill(met);
+    HT_h->Fill(HT);
+
+    int njet=0;
+    for(unsigned int ijet = 0; ijet<jetPts->size(); ijet++){
+      if(jetPts->at(ijet)>40) njet+=1;
+    }
+
+    njets->Fill(njet);
+
+    TLorentzVector v1, v2;
+    if(vSSLep.at(0)->isEl){
+      v1.SetPtEtaPhiM(vSSLep.at(0)->pt, vSSLep.at(0)->eta, vSSLep.at(0)->phi, M_EL);
+    }
+    else{
+      v1.SetPtEtaPhiM(vSSLep.at(0)->pt, vSSLep.at(0)->eta, vSSLep.at(0)->phi, M_MU);
+    }
+    if(vSSLep.at(1)->isEl){
+      v2.SetPtEtaPhiM(vSSLep.at(1)->pt, vSSLep.at(1)->eta, vSSLep.at(1)->phi, M_EL);
+    }
+    else{
+      v2.SetPtEtaPhiM(vSSLep.at(1)->pt, vSSLep.at(1)->eta, vSSLep.at(1)->phi, M_MU);
+    }
+    dilep_mass->Fill( (v1+v2).M());
+
+    //cut on dilepton mass
+    if( (v1+v2).M() <250) continue;
+    //check mass with two electrons and jet
+    /*    float dR = 1000;
+    unsigned int closejet = -1;
+    for(unsigned int i = 0; i <jetPts->size();i++){
+      if(jetPts->at(i)<100) continue;
+      float dr= pow( pow(jetEtas->at(i)-vSSLep.at(lep2)->eta,2) + pow( jetPhis->at(i)-vSSLep.at(lep2)->phi,2),0.5);
+      if(dr<dR) closejet =i;
+    }
+
+    //now make lorentz vectors
+    TLorentzVector vjet;
+    vjet.SetPtEtaPhiM(jetPts->at(closejet),jetEtas->at(closejet),jetPhis->at(closejet),0);
+
+    //mass of three
+    TriMass->Fill( (v1 + v2 + vjet).M() );
+    */
+
+    N_all+=1;
     
     //now only events this far in loop have passed all cuts so plot HT
     HTHist->Fill(HT);
@@ -273,6 +394,7 @@ void Ex_2p5(){
   std::cout<<"Number of eventspassing Jetpt1 cut: "<<NJetpt1cut<<std::endl;
   std::cout<<"Number of eventspassing Jetpt2 cut: "<<NJetpt2cut<<std::endl;
   std::cout<<"Number of events passing HT cut: "<<NHTcut<<std::endl;
+  std::cout<<"Number of events passing all cuts: "<<N_all<<std::endl;
 
 
   fsig->Write();
