@@ -26,7 +26,9 @@ void Ex_1p3(){
     (-3.0 to -2.6, -2.6 to -2.2, -2.2 to -1.8, -1.8 to -1.4, -1.4 to -1.0, -1.0 to -0.6, -0.6 to -0.2, -0.2 to 0.2, 0.2 to 0.6, 0.6 to 1.0, 1.0 to 1.4, 1.4 to 1.8, 1.8 to 2.2, 2.2 to 2.6, 2.6 to 3.0)
    */
   //uncomment when ready to use
-  //float weights[15] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+  double weights[15] = {0,0.00310209,0.00319882,0.002216,0.00107367,0.000806831, 0.000135953,0.000669693,0.000472845,0.000678656,0.000774127,0.00261718,0.00264455,0.00472953,0};
+
+
 
   //load 'data' file - in this case ttbar mc
   TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
@@ -116,7 +118,7 @@ void Ex_1p3(){
 
     //first apply cuts that don't need a loop
         //check met req
-    if( met < 100) continue;
+    if( met < 130) continue;
     //Nmetcut +=1;
 
 
@@ -125,11 +127,11 @@ void Ex_1p3(){
     //NJetscut +=1;
 
     //check for high pt jet
-    if(jetPts->at(0) < 150) continue;
+    if(jetPts->at(0) < 240) continue;
     //NJetpt1cut+=1;
 
     //check for second jet
-    if(jetPts->at(1) < 50) continue;
+    if(jetPts->at(1) < 140) continue;
     //    NJetpt2cut+=1;
 
     //check HT req
@@ -258,6 +260,47 @@ void Ex_1p3(){
     //check OPPOSITE sign
     if(vTightLep.at(0)->charge==vTightLep.at(1)->charge) continue;
 
+        
+    //cut harder on lepton pt
+    float temp_pt = 0;
+    for(unsigned int i = 0; i < vTightLep.size();i++){
+      if(vTightLep.at(i)->pt > temp_pt) temp_pt = vTightLep.at(i)->pt;
+    }
+
+    //check to make sure hardest lepton is above 100 GeV
+    if(temp_pt<140) continue;
+
+    float sec_pt = 0;
+    unsigned int lep2 = 0;
+    for(unsigned int i = 0 ; i < vTightLep.size(); i++){
+      if((vTightLep.at(i)->pt > sec_pt) && (vTightLep.at(i)->pt!=temp_pt)) {
+	lep2=i;
+	sec_pt = vTightLep.at(i)->pt;
+      }
+    }
+
+    if(sec_pt < 100) continue;
+
+    TLorentzVector v1, v2;
+    if(vTightLep.at(0)->isEl){
+      v1.SetPtEtaPhiM(vTightLep.at(0)->pt, vTightLep.at(0)->eta, vTightLep.at(0)->phi, M_EL);
+    }
+    else{
+      v1.SetPtEtaPhiM(vTightLep.at(0)->pt, vTightLep.at(0)->eta, vTightLep.at(0)->phi, M_MU);
+    }
+    if(vTightLep.at(1)->isEl){
+      v2.SetPtEtaPhiM(vTightLep.at(1)->pt, vTightLep.at(1)->eta, vTightLep.at(1)->phi, M_EL);
+    }
+    else{
+      v2.SetPtEtaPhiM(vTightLep.at(1)->pt, vTightLep.at(1)->eta, vTightLep.at(1)->phi, M_MU);
+    }
+
+    
+    //cut on dilepton mass
+    if( (v1+v2).M() <250) continue;
+
+
+
     //check channel
     bool ee = false;
     bool emu = false;
@@ -278,8 +321,13 @@ void Ex_1p3(){
 
     // ADD CODE HERE TO CALCULATE PROBABLITY FOR EACH EVENT
 
-    float ee_weight = 1;// fill in
-    float emu_weight = 1;// fill in
+    float ee_weight = EtaWeight(weights, vTightLep.at(0)->eta) + EtaWeight(weights, vTightLep.at(1)->eta) - EtaWeight(weights, vTightLep.at(0)->eta)*EtaWeight(weights, vTightLep.at(1)->eta);;// fill in
+    float emu_weight;// = EtaWeight(weights,vTightLep.at(;// fill in
+    if(vTightLep.at(0)->isEl)
+      emu_weight = EtaWeight(weights, vTightLep.at(0)->eta); //misId rate for mu is zero                                                                                                                          
+    else
+      emu_weight = EtaWeight(weights, vTightLep.at(1)->eta);
+
 
     //fill HT histogram
     if(ee){
