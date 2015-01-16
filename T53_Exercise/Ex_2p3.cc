@@ -18,10 +18,10 @@ void Ex_2p3(){
 
 
   ///PLACE TO ADD IN NUMBERS FOR PROMPT AND FAKE RATE
-  float f_e  = 0.36;
-  float p_e  = 0.8;
-  float f_mu = 0.97;
-  float p_mu = 1.0;
+  float f_e  = 0.419847;
+  float p_e  = 0.83468;
+  float f_mu = 0.078;
+  float p_mu = 0.828028;
 
   //variables we will use later based on that:
   float eps_e  = (f_e) / (1 - f_e);
@@ -42,11 +42,11 @@ void Ex_2p3(){
   TChain* tdata = new TChain("ljmet");
   
   //add files to tchain
-  tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
-  tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_WZ.root");
-  tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_WJets.root");
+  //tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
+  //tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_WZ.root");
+  //tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_WJets.root");
   tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
-  tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_TTZ.root");
+  //tdata->Add("/uscms_data/d3/clint/public/ljmet_tree_TTZ.root");
 
   //output file
   TFile* fbg = new TFile("bg_nonPrompt.root","RECREATE");
@@ -68,8 +68,18 @@ void Ex_2p3(){
   TH1F* HTtl_ee = new TH1F("HTtl_ee","H_{T} for events with one tight and one loose leptons",40,0,2000);
   TH1F* HTll_ee = new TH1F("HTll_ee","H_{T} for events with two loose leptons",40,0,2000);
 
+  TH1F* leadlep_pt = new TH1F("leadlep_pt","leading lepton pt",100,0,1000);
+  TH1F* sublep_pt = new TH1F("sublep_pt","subleading lepton pt",100,0,1000);
 
+  TH1F* leadjet_pt = new TH1F("leadjet_pt","leading jet pt",100,0,1000);
+  TH1F* subjet_pt = new TH1F("subjet_pt","sub-leading jet pt",100,0,1000);
 
+  TH1F* met_h = new TH1F("met_h","MET",100,0,1000);
+  TH1F* HT_h = new TH1F("HT_h","HT",50,0,2000);
+
+  TH1F* dilep_mass = new TH1F("dilep_mass","DilepMasss",120,0,1200);
+  TH1F* njets = new TH1F("njets","Number of Jets",10,0,10);
+  TH1F* TriMass = new TH1F("TriMass","Mass of leptons and Closest Jet",120,0,1200);
 
   //count of events with tight/loose leptons
   int Ntt_ee = 0;
@@ -129,6 +139,8 @@ void Ex_2p3(){
   vector<int>* elChargeConsistency = 0;
   //jets
   vector<double>* jetPts = 0;
+  vector<double>* jetEtas = 0;
+  vector<double>* jetPhis = 0;
   //met
   double met = 0;
   //muon pt;
@@ -138,6 +150,16 @@ void Ex_2p3(){
   vector<int> * muIsTight = 0;
   vector<int> * muIsLoose = 0;
   vector<int> * muCharge =0;
+
+  vector<int>    *global = 0;
+  vector<double> *chi2 = 0;
+  vector<int>    *nValMuHits = 0;
+  vector<int>    *nMatchedStations = 0;
+  vector<double> *dxy = 0;
+  vector<double> *dz = 0;
+  vector<int>    *nValPixelHits = 0;
+  vector<int>    *nTrackerLayers = 0;
+  vector<double> *relIso = 0;
 
 
   //set branch addresses
@@ -156,6 +178,8 @@ void Ex_2p3(){
   tdata->SetBranchAddress("elSihih_DileptonCalc",&elSigmaIetaIetas);
   tdata->SetBranchAddress("corr_met_DileptonCalc",&met);
   tdata->SetBranchAddress("AK5JetPt_DileptonCalc",&jetPts);
+  tdata->SetBranchAddress("AK5JetPhi_DileptonCalc",&jetPhis);
+  tdata->SetBranchAddress("AK5JetEta_DileptonCalc",&jetEtas);
   tdata->SetBranchAddress("elCharge_DileptonCalc",&elCharge);
   tdata->SetBranchAddress("elChargeConsistent_DileptonCalc",&elChargeConsistency);
   tdata->SetBranchAddress("muPt_DileptonCalc",&muPts);
@@ -164,6 +188,16 @@ void Ex_2p3(){
   tdata->SetBranchAddress("muIsLoose_DileptonCalc",&muIsLoose);
   tdata->SetBranchAddress("muIsTight_DileptonCalc",&muIsTight);
   tdata->SetBranchAddress("muCharge_DileptonCalc",&muCharge);
+
+  tdata->SetBranchAddress("muGlobal_DileptonCalc",&global);
+  tdata->SetBranchAddress("muChi2_DileptonCalc",&chi2);
+  tdata->SetBranchAddress("muNValMuHits_DileptonCalc",&nValMuHits);
+  tdata->SetBranchAddress("muNMatchedStations_DileptonCalc",&nMatchedStations);
+  tdata->SetBranchAddress("muDxy_DileptonCalc",&dxy);
+  tdata->SetBranchAddress("muDz_DileptonCalc",&dz);
+  tdata->SetBranchAddress("muNValPixelHits_DileptonCalc",&nValPixelHits);
+  tdata->SetBranchAddress("muNTrackerLayers_DileptonCalc",&nTrackerLayers);
+  tdata->SetBranchAddress("muRelIso_DileptonCalc",&relIso);
   
 
   //event loop
@@ -175,7 +209,7 @@ void Ex_2p3(){
       cuts first in order to speed things up.
      */
     //check met req
-    if( met < 100) continue;
+    if( met < 130) continue;
     Nmetcut +=1;
 
 
@@ -184,11 +218,11 @@ void Ex_2p3(){
     NJetscut +=1;
 
     //check for high pt jet
-    if(jetPts->at(0) < 150) continue;
+    if(jetPts->at(0) < 240) continue;
     NJetpt1cut+=1;
 
     //check for second jet
-    if(jetPts->at(1) < 50) continue;
+    if(jetPts->at(1) < 140) continue;
     NJetpt2cut+=1;
 
     //check HT req
@@ -239,11 +273,22 @@ void Ex_2p3(){
       mu->isTight = muIsTight->at(uiMu);
       mu->charge  = muCharge->at(uiMu);
 
+      mu->global           = global->at(uiMu);
+      mu->chi2             = chi2->at(uiMu);
+      mu->nValMuHits       = nValMuHits->at(uiMu);
+      mu->nMatchedStations = nMatchedStations->at(uiMu);
+      mu->dxy              = dxy->at(uiMu);
+      mu->dz               = dz->at(uiMu);
+      mu->nValPixelHits    = nValPixelHits->at(uiMu);
+      mu->nTrackerLayers   = nTrackerLayers->at(uiMu);
+      mu->relIso           = relIso->at(uiMu);
+
+
       Lepton* lep = mu;
       lep->isEl    = false;
       lep->isMu    = true;
-      lep->Tight   = mu->tight();
-      lep->Loose   = mu->loose();
+      lep->Tight   = mu->cutBasedTight();
+      lep->Loose   = mu->cutBasedLoose();
       vLep.push_back(lep);
     }
 
@@ -306,8 +351,81 @@ void Ex_2p3(){
     //skip event without same sign leptons
     if(!samesign) continue;
     
+    //cut harder on lepton pt
+    float temp_pt = 0;
+    for(unsigned int i = 0; i < vSSLep.size();i++){
+      if(vSSLep.at(i)->pt > temp_pt) temp_pt = vSSLep.at(i)->pt;
+    }
 
 
+
+    //check to make sure hardest lepton is above 100 GeV
+    if(temp_pt<140) continue;
+
+    //check second leading lepton
+
+    float sec_pt = 0;
+    unsigned int lep2 = 0;
+    for(unsigned int i = 0 ; i < vSSLep.size(); i++){
+      if((vSSLep.at(i)->pt > sec_pt) && (vSSLep.at(i)->pt!=temp_pt)) {
+	lep2=i;
+	sec_pt = vSSLep.at(i)->pt;
+      }
+    }
+
+    if(sec_pt < 100) continue;
+
+    leadlep_pt->Fill(temp_pt);
+    sublep_pt->Fill(sec_pt);
+    leadjet_pt->Fill(jetPts->at(0));
+    subjet_pt->Fill(jetPts->at(1));
+
+    met_h->Fill(met);
+    HT_h->Fill(HT);
+
+    int njet=0;
+    for(unsigned int ijet = 0; ijet<jetPts->size(); ijet++){
+      if(jetPts->at(ijet)>40) njet+=1;
+    }
+
+    njets->Fill(njet);
+    TLorentzVector v1, v2;
+    if(vSSLep.at(0)->isEl){
+      v1.SetPtEtaPhiM(vSSLep.at(0)->pt, vSSLep.at(0)->eta, vSSLep.at(0)->phi, M_EL);
+    }
+    else{
+      v1.SetPtEtaPhiM(vSSLep.at(0)->pt, vSSLep.at(0)->eta, vSSLep.at(0)->phi, M_MU);
+    }
+    if(vSSLep.at(1)->isEl){
+      v2.SetPtEtaPhiM(vSSLep.at(1)->pt, vSSLep.at(1)->eta, vSSLep.at(1)->phi, M_EL);
+    }
+    else{
+      v2.SetPtEtaPhiM(vSSLep.at(1)->pt, vSSLep.at(1)->eta, vSSLep.at(1)->phi, M_MU);
+    }
+    dilep_mass->Fill( (v1+v2).M());
+    
+    //cut on dilepton mass
+    if( (v1+v2).M() <250) continue;
+   
+    /*
+    //check mass with two electrons and jet
+    float dR = 1000;
+    unsigned int closejet = -1;
+    for(unsigned int i = 0; i <jetPts->size();i++){
+      if(jetPts->at(i)<100) continue;
+      float dr= pow( pow(jetEtas->at(i)-vSSLep.at(lep2)->eta,2) + pow( jetPhis->at(i)-vSSLep.at(lep2)->phi,2),0.5);
+      if(dr<dR) closejet =i;
+    }
+
+    //now make lorentz vectors
+    TLorentzVector vjet;
+    vjet.SetPtEtaPhiM(jetPts->at(closejet),jetEtas->at(closejet),jetPhis->at(closejet),0);
+
+    //mass of three
+    if(dR<1){
+      TriMass->Fill( (v1 + v2 + vjet).M() );
+    }
+*/
     //need to separate out different channels:
     bool ee   = false;
     bool emu  = false;
@@ -408,7 +526,7 @@ void Ex_2p3(){
       }
     }
 
-    //now ee channel
+    //now mu mu channel
     if(mumu){
       //check if first lepton is tight
       if(vSSLep.at(0)->Tight){
@@ -451,7 +569,7 @@ void Ex_2p3(){
   std::cout<<"Number of eventspassing Jetpt2 cut: "<<NJetpt2cut<<std::endl;
   std::cout<<"Number of events passing HT cut: "<<NHTcut<<std::endl;
 
-
+  std::cout<<"nll_mumu "<<Nll_mumu<<" ntl_mumu "<<Ntl_mumu<<" Ntt_mumu :"<<Ntt_mumu<<std::endl;
 
   //CONVERT TO NUMBER OF EVENTS PREDICTED FROM EACH BACKGROUND SOURCE
 
@@ -513,7 +631,7 @@ void Ex_2p3(){
   //then, N_fp plus N_ff should equal the number of events we have with two tight leptons so let's check:
   float Nfake_emu = Nfp_emu + Nff_emu + Npf_emu;
   float Nfake_ee = Nfp_ee + Nff_ee;
-  float Nfake_mumu = Nfp_mumu + Nff_ee;
+  float Nfake_mumu = Nfp_mumu + Nff_mumu;
 
 
 
