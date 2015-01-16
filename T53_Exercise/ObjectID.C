@@ -131,6 +131,17 @@ public:
   int isLoose;
   int isTight;
 
+  int    global;
+  double chi2;
+  int    nValMuHits;
+  int    nMatchedStations;
+  double dxy;
+  double dz;
+  int    nValPixelHits;
+  int    nTrackerLayers;
+  double relIso;
+
+
   bool tight(){
     if(!isTight) return false;
     if(pt<20) return false;
@@ -143,6 +154,36 @@ public:
     else return true;
   }
 
+  bool cutBasedTight(){
+    if (pt < 20)              return false;
+    if (global < 5)           return false; //Global muon and tracker muon
+    if (chi2 > 10)            return false;
+    if (nValMuHits < 1)       return false;
+    if (nMatchedStations < 2) return false;
+    if (dxy > 0.2)            return false;
+    if (dz > 0.5)             return false;
+    if (nValPixelHits < 1)    return false;
+    if (nTrackerLayers < 6)   return false;
+    if (relIso > 0.06)        return false;
+
+    return true;
+  }
+
+  bool cutBasedLoose(){
+    if (pt < 20)              return false;
+    //if (global < 5)           return false; //Global muon and tracker muon
+ // if (chi2 > 50)            return false; //Cut relaxed from 10 to 50
+    //if (nValMuHits < 1)       return false;
+ // if (nMatchedStations < 2) return false; //Cut removed
+    if (dxy > 2.0)            return false; //Cut relaxed from 0.2 to 2.0
+ // if (dz > 0.5)             return false; //Cut removed 
+    if (nValPixelHits < 1)    return false;
+ // if (nTrackerLayers < 6)   return false; //Cut removed
+    //if (relIso > 0.20)        return false; //Cut relaxed from 0.12 to 0.40
+
+    return true;
+  }
+
   void init(){
     pt   = -100;
     eta  = -100;
@@ -153,5 +194,14 @@ public:
     isLoose = -1;
     isTight = -1;
 
+    global           = -100;
+    chi2             =  100;
+    nValMuHits       = -100;
+    nMatchedStations = -100;
+    dxy              =  100;
+    dz               =  100;
+    nValPixelHits    = -100;
+    nTrackerLayers   = -100;
+    relIso           =  100;
   }
 };
