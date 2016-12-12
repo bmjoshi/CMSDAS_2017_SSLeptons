@@ -23,7 +23,7 @@ void Ex_1p1(){
   //load file and tree
   //TChain* t = new TChain("ljmet");
   TChain* t = new TChain("ChargeMisID");
-  t->Add("ChargeMisID_Data_Run2016_Electrons_MVATightRC_100events.root");
+  t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_Data_Run2016_Electrons_MVATightRC.root");
   
 
   int nEntries = t->GetEntries();
@@ -75,7 +75,6 @@ void Ex_1p1(){
     totPtHist->Fill(v1.Pt());
     totPtHist->Fill(v2.Pt());
 
-    //if (elPts1->at(uiEl) == elPts2->at(uiEl)){
     if (elCharge1 == elCharge2 ){
       ssmass->Fill(mass);	    
       ssEtaHist->Fill(v1.Eta());
