@@ -23,7 +23,9 @@ void Ex_1p1(){
   //load file and tree
   //TChain* t = new TChain("ljmet");
   TChain* t = new TChain("ChargeMisID");
-  t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_Data_Run2016_Electrons_MVATightRC.root");
+  //t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_Data_Run2016_Electrons_MVATightRC.root");
+  t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_Data_2016_Electrons_MVATightRC.root");
+  //t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/DY.root");
   
 
   int nEntries = t->GetEntries();
@@ -40,11 +42,13 @@ void Ex_1p1(){
   t->SetBranchAddress("Lep1Phi", &elPhis1);
   t->SetBranchAddress("Lep1E", &elEs1);
   t->SetBranchAddress("Lep1Charge", &elCharge1);
+  t->SetBranchAddress("Lep1Tight", &elTight1);
   t->SetBranchAddress("Lep2Pt", &elPts2);
   t->SetBranchAddress("Lep2Eta", &elEtas2);
   t->SetBranchAddress("Lep2Phi", &elPhis2);
   t->SetBranchAddress("Lep2E", &elEs2);
   t->SetBranchAddress("Lep2Charge", &elCharge2);
+  t->SetBranchAddress("Lep2Tight", &elTight2);
 
   //Histograms
   TH1F* allmass = new TH1F("allmass","DiElectron Invariant Mass All Events",100,0.,200.);
@@ -61,6 +65,14 @@ void Ex_1p1(){
   for(int ient = 0; ient < nEntries; ient++){
     t->GetEntry(ient);
     if(ient % 1000 ==0) std::cout<<"Completed "<<ient<<" out of "<<nEntries<<" events"<<std::endl;
+
+    // THE LINES BELOW DETERMINES THE QUALITY OF THE ELECTRONS
+    //if (elTight1 != true) continue; 
+    //if (elTight2 != true) continue;     
+
+    // Fill histogram only if in same eta bin 
+    // we do this so that we meassure the charge misID rate of a single lepton with respect to eta
+    if (getEtaBin( abs(elEtas1) )!= getEtaBin( abs(elEtas2)) ) continue;
 
     TLorentzVector v1, v2;
     v1.SetPtEtaPhiM(elPts1, elEtas1, elPhis1, M_EL);
