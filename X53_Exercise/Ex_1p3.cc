@@ -12,27 +12,44 @@ const double M_MU = 0.1056583715;   //Mass of muon in GeV
 const double M_Z  = 91.1876;        //Mass of Z boson
 const double dM   = 15;             //Size of window around Z
 
-double EtaWeight(double* weights,double eta){
-  float fbin = fabs(-3.0-eta)/0.4;
+int getEtaBin(float abseta){
+  int bin=-1;
+  if(abseta>2.0) bin=6;
+  else if(abseta>1.556) bin=5;
+  else if(abseta>1.442) bin=4;
+  else if(abseta>0.8) bin=3;
+  else if(abseta>0.4) bin=2;
+  else if(abseta>=0.0) bin=1;
+
+  return bin;
+}
+
+
+//Feed this method a given eta and  your weight array, and this will return the corresponding weight
+double EtaWeight(double* weights,double eta,double pt){
+  int fbin = getEtaBin( abs(eta) );
   std::cout<<"eta diff "<<fbin<<std::endl;
-  int bin = (int) fbin;
-  return weights[bin];
+  if (pt > 100.0){ //high pt 
+    fbin+6;
+  }
+  return weights[fbin-1];
 };
 
 void Ex_1p3(){
-
-
-  /*add in charge misID rate you measured earlier, weights should conform to the following binning for eta:
-    (-3.0 to -2.6, -2.6 to -2.2, -2.2 to -1.8, -1.8 to -1.4, -1.4 to -1.0, -1.0 to -0.6, -0.6 to -0.2, -0.2 to 0.2, 0.2 to 0.6, 0.6 to 1.0, 1.0 to 1.4, 1.4 to 1.8, 1.8 to 2.2, 2.2 to 2.6, 2.6 to 3.0)
+  /*add in charge misID rate you measured earlier, weights should conform to the binning for eta from getEtaBin:
+    0.0-0.4, 0.4-0.8, 0.8-1.442, 1.442-1.556, 1.556-2.0, 2.0 - infinity
+    The six eta region weights for low pt should come first, followed by the high pt weights 
    */
   //uncomment when ready to use
-  double weights[15] = {0,0.00310209,0.00319882,0.002216,0.00107367,0.000806831, 0.000135953,0.000669693,0.000472845,0.000678656,0.000774127,0.00261718,0.00264455,0.00472953,0};
 
+  double weights[12] = {0.00026, 0.00021, 0.00106, 0.0, 0.00806, 0.00970,
+			0.00240, 0.00202, 0.01165, 0.0, 0.02621, 0.03616};
 
-
-  //load 'data' file - in this case ttbar mc
-  TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
-  TTree* t = (TTree*)f->Get("ljmet");
+  //load data file - This file is a sum of all data files with opposite-signed leptons
+  //TFile* f = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
+  TFile* f = new TFile("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_MuCBTightMiniIsoTight_ElMVATightRC_2016B-H.root");
+  //TTree* t = (TTree*)f->Get("ChargeMisID");
+  TTree* t = (TTree*)f->Get("tEvts_ssdl");
 
   //output files
   TFile* fbg = new TFile("bg_chargeMisID.root","RECREATE");
@@ -63,10 +80,6 @@ void Ex_1p3(){
   //sigmaIetaIeta
   vector<double>* elSigmaIetaIetas = 0;
   vector<int>* elChargeConsistency = 0;
-  //jets
-  vector<double>* jetPts = 0;
-  //met
-  double met = 0;
   //muon pt;
   vector<double> *muPts = 0;
   vector<double> *muEtas = 0;
@@ -75,11 +88,40 @@ void Ex_1p3(){
   vector<int> * muIsLoose = 0;
   vector<int> * muCharge =0;
 
+  float lepPts1, lepEtas1, lepPhis1, lepEs1;
+  float lepPts2, lepEtas2, lepPhis2, lepEs2;
+  int lepFlavor1, lepFlavor2;
+  int lepCharge1, lepCharge2;
+  int lepTight1, lepTight2;
+  int lepLoose1, lepLoose2;
+  float assocMass, dilepMass
+  //jets
+  vector<double>* jetPts = 0;
+  //met
+  double met = 0;
+
   //Set branch addresses
-  t->SetBranchAddress("elPt_DileptonCalc", &elPts);
-  t->SetBranchAddress("elEta_DileptonCalc", &elEtas);
-  t->SetBranchAddress("elPhi_DileptonCalc", &elPhis);
-  t->SetBranchAddress("elCharge_DileptonCalc", &elCharge);
+  t->SetBranchAddress("Lep1Pt", &lepPts1);
+  t->SetBranchAddress("Lep1Eta", &lepEtas1);
+  t->SetBranchAddress("Lep1Phi", &lepPhis1);
+  t->SetBranchAddress("Lep1E", &lepEs1);
+  t->SetBranchAddress("Lep1Charge", &lepCharge1);
+  t->SetBranchAddress("Lep1Flavor", &lepFlavor1);
+  //t->SetBranchAddress("Lep1Tight", &lepTight1);
+  //t->SetBranchAddress("Lep1Loose", &lepLoose1);
+  t->SetBranchAddress("Lep2Pt", &lepPts2);
+  t->SetBranchAddress("Lep2Eta", &lepEtas2);
+  t->SetBranchAddress("Lep2Phi", &lepPhis2);
+  t->SetBranchAddress("Lep2E", &lepEs2);
+  t->SetBranchAddress("Lep2Charge", &lepCharge2);
+  t->SetBranchAddress("Lep2Flavor", &lepFlavor2);
+  //t->SetBranchAddress("Lep2Tight", &lepTight2);
+  //t->SetBranchAddress("Lep2Loose", &lepLoose2);
+  t->SetBranchAddress("MET",&met);
+  t->SetBranchAddress("AssocMass",&assocMass); //any two electrons that whose invariant mass is closest to Z mass 
+  t->SetBranchAddress("DilepMass",&dilepMass); //invariant mass of two opposite sign leptons
+
+  /*
   t->SetBranchAddress("elDeta_DileptonCalc", &elDeta);
   t->SetBranchAddress("elDphi_DileptonCalc", &elDphi);
   t->SetBranchAddress("elDZ_DileptonCalc", &elDZs);
@@ -90,16 +132,12 @@ void Ex_1p3(){
   t->SetBranchAddress("elRelIso_DileptonCalc",&elRelIsos);
   t->SetBranchAddress("elSihih_DileptonCalc",&elSigmaIetaIetas);
   t->SetBranchAddress("elChargeConsistent_DileptonCalc",&elChargeConsistency);
-  t->SetBranchAddress("corr_met_DileptonCalc",&met);
   t->SetBranchAddress("AK5JetPt_DileptonCalc",&jetPts);
   t->SetBranchAddress("elChargeConsistent_DileptonCalc",&elChargeConsistency);
-  t->SetBranchAddress("muPt_DileptonCalc",&muPts);
-  t->SetBranchAddress("muEta_DileptonCalc",&muEtas);
-  t->SetBranchAddress("muPhi_DileptonCalc",&muPhis);
   t->SetBranchAddress("muIsLoose_DileptonCalc",&muIsLoose);
   t->SetBranchAddress("muIsTight_DileptonCalc",&muIsTight);
   t->SetBranchAddress("muCharge_DileptonCalc",&muCharge);
-
+  */
   //Histograms
   //TH1F* ssEtaHist = new TH1F("ssEtaHist","#eta",30,-3,3);
   //TH1F* osEtaHist = new TH1F("osEtaHist","#eta",30,-3,3);
@@ -121,7 +159,6 @@ void Ex_1p3(){
     if( met < 130) continue;
     //Nmetcut +=1;
 
-
    //require more than one jet
     if(jetPts->size() < 2) continue;
     //NJetscut +=1;
@@ -142,6 +179,10 @@ void Ex_1p3(){
 
     if( HT < 700) continue;
 
+    if (assocMass > M_Z - dM && assocMass < M_Z + dM) continue;
+    if (dilepMass > M_Z - dM && dilepMass < M_Z + dM) continue;
+    
+
     /*
     //now make ST cut;
     float ST = HT;
@@ -155,6 +196,7 @@ void Ex_1p3(){
     */
 
     //Put electrons back together into coherent objects
+    /*
     vector<Electron*> vEl;
     for (unsigned int uiEl = 0; uiEl < elPts->size(); uiEl++){
       Electron* el = new Electron;
@@ -176,9 +218,11 @@ void Ex_1p3(){
       
       vEl.push_back(el);
     }
+    */
 
+    /*
     bool foundPair = false;
-
+    
     //vector for tight electrons
     vector<Electron*> vTightEl;
     //vector for tight leptons
@@ -255,21 +299,26 @@ void Ex_1p3(){
     //skip if zboson
     if(foundMuPair) continue;
 
-    //now check for only two tight leptons
-    if(vTightLep.size()!=2) continue;
-    //check OPPOSITE sign
-    if(vTightLep.at(0)->charge==vTightLep.at(1)->charge) continue;
+*/
 
-        
+    //now check for only two tight leptons
+    if(vTightLep.size()!=2) continue; //FIXME: delete - Lep1Tight/Lep2Tight sample bug - not filled 
+    //check OPPOSITE sign
+    //if(vTightLep.at(0)->charge==vTightLep.at(1)->charge) continue; //sample is all opposite sign - Lep1Charge/Lep2Charge sample bug - not filled
+
+    /*        
     //cut harder on lepton pt
     float temp_pt = 0;
     for(unsigned int i = 0; i < vTightLep.size();i++){
       if(vTightLep.at(i)->pt > temp_pt) temp_pt = vTightLep.at(i)->pt;
     }
-
+    */
+    
     //check to make sure hardest lepton is above 100 GeV
-    if(temp_pt<140) continue;
+    //if(temp_pt<140) continue;
+    if(lepPt1<40) continue;
 
+    /*
     float sec_pt = 0;
     unsigned int lep2 = 0;
     for(unsigned int i = 0 ; i < vTightLep.size(); i++){
@@ -278,9 +327,12 @@ void Ex_1p3(){
 	sec_pt = vTightLep.at(i)->pt;
       }
     }
+    */
+    //if(sec_pt < 100) continue;
+    if(lepPt2<30) continue;
 
-    if(sec_pt < 100) continue;
-
+    //FIXME: dzou - not sure what this SetPtEtaPhiM does - need to read method
+    /*
     TLorentzVector v1, v2;
     if(vTightLep.at(0)->isEl){
       v1.SetPtEtaPhiM(vTightLep.at(0)->pt, vTightLep.at(0)->eta, vTightLep.at(0)->phi, M_EL);
@@ -294,23 +346,26 @@ void Ex_1p3(){
     else{
       v2.SetPtEtaPhiM(vTightLep.at(1)->pt, vTightLep.at(1)->eta, vTightLep.at(1)->phi, M_MU);
     }
-
-    
+*/
     //cut on dilepton mass
-    if( (v1+v2).M() <250) continue;
-
-
+    //if( (v1+v2).M() <250) continue;
+    if (dilepMass < 250) continue;
 
     //check channel
     bool ee = false;
     bool emu = false;
     bool mumu = false;
 
+    if( (lepFlavor1 == 0) && (lepFlavor2 == 0) ) ee = true;
+    if( (lepFlavor1 == 0) && (lepFlavor2 == 1) ) emu = true;
+    if( (lepFlavor1 == 1) && (lepFlavor2 == 0) ) emu = true;
+    if( (lepFlavor1 == 1) && (lepFlavor2 == 1) ) mumu = true;
+    /*
     if(vTightLep.at(0)->isEl && vTightLep.at(1)->isEl) ee = true;
     if(vTightLep.at(0)->isEl && vTightLep.at(1)->isMu) emu = true;
     if(vTightLep.at(0)->isMu && vTightLep.at(1)->isEl) emu = true;
     if(vTightLep.at(0)->isMu && vTightLep.at(1)->isMu) mumu = true;
-
+    */
     //skip any di-mu events since we assume they don't contribute to ss via charge misID
     if(mumu) continue;
 
@@ -321,13 +376,12 @@ void Ex_1p3(){
 
     // ADD CODE HERE TO CALCULATE PROBABLITY FOR EACH EVENT
 
-    float ee_weight = EtaWeight(weights, vTightLep.at(0)->eta) + EtaWeight(weights, vTightLep.at(1)->eta) - EtaWeight(weights, vTightLep.at(0)->eta)*EtaWeight(weights, vTightLep.at(1)->eta);;// fill in
-    float emu_weight;// = EtaWeight(weights,vTightLep.at(;// fill in
-    if(vTightLep.at(0)->isEl)
-      emu_weight = EtaWeight(weights, vTightLep.at(0)->eta); //misId rate for mu is zero                                                                                                                          
+    float ee_weight = EtaWeight(weights, lepEta1, lepPt1) + EtaWeight(weights, lepEta2, lepPt2) - EtaWeight(weights, lepEta1, lepPt1)*EtaWeight(weights, lepEta2, lepPt2);
+    float emu_weight;
+    if(lepFlavor1 == 0)
+      emu_weight = EtaWeight(weights, lepEta1, lepPt1); //misId rate for mu is zero
     else
-      emu_weight = EtaWeight(weights, vTightLep.at(1)->eta);
-
+      emu_weight = EtaWeight(weights, lepEta2, lepPt2);
 
     //fill HT histogram
     if(ee){
@@ -346,14 +400,14 @@ void Ex_1p3(){
   TCanvas c1;
   osHTHist->Draw();
   c1.Print("HT_oppositeSignEvents.pdf");
-
-  TCanvas c2;
+  /* //sample does not have Same sign events
+  TCanvas c2; 
   ssHTHist->Draw();
   c2.Print("HT_sameSignEvents.pdf");
-
+  */
   //finally let's save our predictions to a root file for ease of use later
   T->Branch("osHTHist","TH1F",&osHTHist,32000,0);
-  T->Branch("ssHTHist","TH1F",&ssHTHist,32000,0);
+  //T->Branch("ssHTHist","TH1F",&ssHTHist,32000,0);
   T->Fill();
   T->Print();
   fbg->Write();
