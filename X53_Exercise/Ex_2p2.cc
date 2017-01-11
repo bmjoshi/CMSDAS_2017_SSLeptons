@@ -40,7 +40,7 @@ void Ex_2p2(){
   TH1F* denEtaHist_m = new TH1F("denEtaHist_m","Lepton #eta - LOOSE ID",30,-3.,3.);
 
   
-  // * ADD CODE HERE TO GET TOTAL PROMPT RATE *
+  // * ADD CODE HERE TO GET TOTAL FAKE RATE * (initialize variables)
   
   int nEntriesMu = tMu->GetEntries();
   //set branch addresses
@@ -76,7 +76,7 @@ void Ex_2p2(){
     //check tight
     if(muIsTight){
 
-      // *Currently miniIso requirement is doing nothing* - PLAY WITH THIS NUMBER (0-0.4) TO SEE IT'S EFFECTS ON THE PROMPT RATE
+      // *Currently miniIso requirement is doing nothing* - PLAY WITH THIS NUMBER (0-0.4) TO SEE IT'S EFFECTS ON THE FAKE RATE
       if(muMiniIso<0.1){
 	numEtaHist_m->Fill(muEta);
 	numPtHist_m->Fill(muPt);
@@ -94,7 +94,7 @@ void Ex_2p2(){
     //check tight
     if(elIsTight){
 
-      // *Currently miniIso requirement is doing nothing* - PLAY WITH THIS NUMBER (0-0.4) TO SEE IT'S EFFECTS ON THE PROMPT RATE
+      // *Currently miniIso requirement is doing nothing* - PLAY WITH THIS NUMBER (0-0.4) TO SEE IT'S EFFECTS ON THE FAKE RATE
       if(elMiniIso<0.1){
 	numEtaHist_e->Fill(elEta);
 	numPtHist_e->Fill(elPt);
@@ -127,6 +127,6 @@ void Ex_2p2(){
   etagraph_m->Draw("apl");
   c4.Print("FakeRate_v_Eta_m.pdf");
 
-  //* ADD CODE TO PRINT OUT OVERALL FAKE RATES *
+  //* ADD CODE TO PRINT OUT OVERALL FAKE RATES * (Final calculations)
 
 }

@@ -43,7 +43,7 @@ void Ex_2p1(){
   // * ADD CODE  HERE TO PLOT PROMPT RATE VS. MINISOLATION REQUIREMENT *
 
 
-  // * ADD CODE HERE TO GET TOTAL PROMPT RATE *
+  // * ADD CODE HERE TO GET TOTAL PROMPT RATE * (this is where you will want to define your variables)
   
   int nEntriesMu = tMu->GetEntries();
   //set branch addresses
@@ -133,7 +133,7 @@ void Ex_2p1(){
   etagraph_mumu->Draw("apl");
   c4.Print("PromptRate_v_Eta_mumu.pdf");
 
-  //ADD YOUR CODE TO GIVE THE PROMPT RATE FOR ELECTRONS AND THE PROMPT RATE FOR MUONS
+  //ADD YOUR CODE TO GIVE THE PROMPT RATE FOR ELECTRONS AND THE PROMPT RATE FOR MUONS (Final calculations)
 
 
 
