@@ -34,11 +34,8 @@ void Ex_1p1p5(){
   double weightEtaLowPtFill[NBINS]={0.000249771, 0.000174497, 0.0011059, 0.0, 0.00788604, 0.00899985}; //weights array for you to replace by hand (after running and getting rates from low pt histograms in Ex_1p1)
 
   //load file and tree
-  //TChain* t = new TChain("ljmet");
   TChain* t = new TChain("ChargeMisID");
-  t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_Data_Run2016_Electrons_MVATightRC.root");
-  //t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_Data_2016_Electrons_MVATightRC.root");
-  //t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/DY.root");
+  t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_Data_All_2016_B-H_Electrons_MVATightRC.root");
   
   int nEntries = t->GetEntries();
 
@@ -55,13 +52,13 @@ void Ex_1p1p5(){
   t->SetBranchAddress("Lep1Phi", &elPhis1);
   t->SetBranchAddress("Lep1E", &elEs1);
   t->SetBranchAddress("Lep1Charge", &elCharge1);
-  //t->SetBranchAddress("Lep1Tight", &elTight1);
+  t->SetBranchAddress("Lep1Tight", &elTight1);
   t->SetBranchAddress("Lep2Pt", &elPts2);
   t->SetBranchAddress("Lep2Eta", &elEtas2);
   t->SetBranchAddress("Lep2Phi", &elPhis2);
   t->SetBranchAddress("Lep2E", &elEs2);
   t->SetBranchAddress("Lep2Charge", &elCharge2);
-  //t->SetBranchAddress("Lep2Tight", &elTight2);
+  t->SetBranchAddress("Lep2Tight", &elTight2);
 
   // Histogram for charge misID rate measure per Eta and Pt binning for high pt (>100 GeV) electrons
   Double_t edges[NBINS+1] = {0.0, 0.4, 0.8, 1.442, 1.556, 2.0, 3.0};
@@ -78,23 +75,6 @@ void Ex_1p1p5(){
     //if ((elTight1 != true) || (elTight2 != true))) continue; //only consider events with two tight electrons
 
     // Fill histogram only if in same eta bin 
-    // we do this so that we meassure the charge misID rate of a single lepton with respect to eta
-    //if (getEtaBin( abs(elEtas1) )!= getEtaBin( abs(elEtas2)) ) continue;
-
-    TLorentzVector v1, v2;
-    v1.SetPtEtaPhiM(elPts1, elEtas1, elPhis1, M_EL);
-    v2.SetPtEtaPhiM(elPts2, elEtas2, elPhis2, M_EL);
-    double mass = (v1+v2).M();
-
-    /*
-    allmass->Fill(mass);
-
-    totEtaHist->Fill(v1.Eta());
-    totEtaHist->Fill(v2.Eta());
-	  
-    totPtHist->Fill(v1.Pt());
-    totPtHist->Fill(v2.Pt());
-    */
 
     float highPtEta;
     float lowPtEta;
@@ -120,57 +100,14 @@ void Ex_1p1p5(){
   double weightEtaHighPtFill[NBINS]={0};
 
   //single lepton charge mis ID rate for high pt (<100 GeV)
+  std::cout<<"weightEtaLowPt {";
   for (int i=1; i<NBINS+1;i++ ){
     weightEtaHighPtFill[i-1] = (ssEtaHighPt->GetBinContent(i) - weightEtaHighPt->GetBinContent(i) )/totEtaHighPt->GetBinContent(i);
-    printf("low pt single lepton charge Mis ID rate for eta bin %d is: %f\n", i, weightEtaHighPtFill[i-1]);
+    //printf("low pt single lepton charge Mis ID rate for eta bin %d is: %f\n", i, weightEtaHighPtFill[i-1]);
+    std::cout<<weightEtaHighPtFill[i-1];
+    if (i<NBINS)
+      std::cout<<", ";
   }
+  std::cout<<"}"<<std::endl;
 
-  
-
-  //Draw the histograms
-  /*
-  TCanvas c1;
-  allmass->Draw();
-
-  c1.Print("DiElectronInvariantMass_all.pdf");
-  */
-  /* ADD CODE TO PLOT MASS DISTRIBUTION FOR OPPOSITE SIGN AND SAME SIGN. 
-     MOST OF IT IS THERE, YOU JUST NEED TO NORMALIZE OSMASS AND SSMASS BEFORE DRAWING THEM
-  */ 
-  /*
-  TCanvas c2;
-  osmass->Draw();
-
-  c2.Print("DiElectronInvariantMass_os.pdf");
-
-  TCanvas c3;
-  ssmass->Draw();
-  
-  c3.Print("DiElectronInvariantMass_ss.pdf");  
-  */
-
-  //ADD CODE TO PRINT OUT CHARGE MISID RATE
-  //Determine the charge misID rate with respect to abs(Eta) and Pt  
-  // Bin abs(Eta) according to the bins given in getEtaBin (these are the bins used in the actual analysis)
-  // and bin pt in a low pt (<100 GeV) bin and a high (>100GeV) bin
-  // You will be asked for 12 rates 
-
-
-  /* ADD CODE HERE TO MAKE PLOTS OF THE CHARGE MISID RATE VS PT, ETA. SOME OF IT IS THERE SO THAT WE ALL HAVE THE SAME OUTPUT FILES
-     HINT1: MAKE USE OF TGRAPHASYMMERRORS, 
-     HINT2: SET YOUR VS ETA BINS ACCORDING TO THE getEtaBin METHOD PROVIDED AT THE BOTTOM OF THIS FILE
-   */
-  //tcanvas for eta plot
-  /*
-  TCanvas c4;
-
-  //add code!
-
-  c4.Print("chargeMisID_vEta.pdf");
-
-  //same as above but for pt
-  TCanvas c5;
-
-  c5.Print("chargeMisID_vPt.pdf");
-  */
 }

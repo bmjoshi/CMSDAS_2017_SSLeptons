@@ -32,13 +32,13 @@ void runSample(int* Ntot_sample, int* Nss_sample, string sampleName = "ChargeMis
   t->SetBranchAddress("Lep1Phi", &elPhis1);
   t->SetBranchAddress("Lep1E", &elEs1);
   t->SetBranchAddress("Lep1Charge", &elCharge1);
-  t->SetBranchAddress("Lep1Tight", &elTight1);
+  //t->SetBranchAddress("Lep1Tight", &elTight1);
   t->SetBranchAddress("Lep2Pt", &elPts2);
   t->SetBranchAddress("Lep2Eta", &elEtas2);
   t->SetBranchAddress("Lep2Phi", &elPhis2);
   t->SetBranchAddress("Lep2E", &elEs2);
   t->SetBranchAddress("Lep2Charge", &elCharge2);
-  t->SetBranchAddress("Lep2Tight", &elTight2);
+  //t->SetBranchAddress("Lep2Tight", &elTight2);
 
   for(int ient = 0; ient < nEntries; ient++){
     t->GetEntry(ient);
@@ -70,32 +70,14 @@ void Ex_1p2(){
     PASS THE MASS WINDOW CUT, AND ALSO HOW MANY PASS THE MASS WINDOW CUT AND ARE SAME SIGN
    */
 
-  /*
-  //load TFiles
-  TFile* fDY = new TFile("/uscms_data/d3/clint/public/ljmet_tree_DY.root");
-  TFile* fWZ = new TFile("/uscms_data/d3/clint/public/ljmet_tree_WZ.root");
-  TFile* fWJets = new TFile("/uscms_data/d3/clint/public/ljmet_tree_WJets.root");
-  TFile* fTT = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TT1.root");
-  TFile* fTTZ = new TFile("/uscms_data/d3/clint/public/ljmet_tree_TTZ.root");
-
-  //load the TTrees
-  TTree* tDY = (TTree*)fDY->Get("ljmet");
-  TTree* tWZ = (TTree*)fWZ->Get("ljmet");
-  TTree* tWJets = (TTree*)fWJets->Get("ljmet");
-  TTree* tTT = (TTree*)fTT->Get("ljmet");
-  TTree* tTTZ = (TTree*)fTTZ->Get("ljmet");
-*/
-
   //define our taget luminosity - we are picking 36.4 fb^{-1} to correspond to the total 2016 run
   float targetlumi = 36.4;
 
   //To simplify things a little I've placed the number of events ran over for each sample below:
-  float nRunDY = 1366703;
-  float nRunWZ = 237484;
-  float nRunWJets = 3828404;
-  float nRunTT = 2206600;
-  float nRunTTZ = 249275;
-  
+  float nRunDY = 49144274;
+  float nRunWZ = 1993200;
+  float nRunTT = 77229341;
+
   /* Now, to figure out how to scale things correctly we need to remember the following equation:
 
      N_events = lumi * cross section
@@ -117,75 +99,62 @@ void Ex_1p2(){
 
   float xsecDY = 1.0;
   float xsecWZ = 1.0;
-  float xsecWJets = 1.0;
   float xsecTT = 1.0;
-  float xsecTTZ = 1.0;
 
   //Here some math is done for you :)
 
   float weightDY = (targetlumi*xsecDY) / (nRunDY);
   float weightWZ = (targetlumi*xsecWZ) / (nRunWZ);
-  float weightWJets = (targetlumi*xsecWJets) / (nRunWJets);
   float weightTT = (targetlumi*xsecTT) / (nRunTT);
-  float weightTTZ = (targetlumi*xsecTTZ) / (nRunTTZ);
 
   //Now that we have the weights we can find out how many events passed out selection:
 
   int* Ntot_DY =new int(0);
   int* Ntot_WZ =new int(0);
-  int* Ntot_WJets =new int(0);
   int* Ntot_TT =new int(0);
-  int* Ntot_TTZ=new int(0);
 
   int* Nss_DY =new int(0);
   int* Nss_WZ =new int(0);
-  int* Nss_WJets =new int(0);
   int* Nss_TT =new int(0);
-  int* Nss_TTZ=new int(0);
 
+  /*
   float nRunTest = 200000;
   float xsecTest = 1.0;
   float weightTest = (targetlumi*xsecTest) / (nRunTest);
   int* Ntot_Test=new int(0);
   int* Nss_Test=new int(0);
-
+  */
 
   //Now run over the samples and count up the number of (total or same signed) events and change the Ntot and Nss variable appropriately (see definition of runSample at top)
-  runSample(Ntot_Test,Nss_Test);
-
+  runSample(Ntot_DY,Nss_DY, "ChargeMisID_DY_25ns_Electrons_MVATightRC.root");
+  runSample(Ntot_TT,Nss_TT, "ChargeMisID_TTbar_25ns_MVATightRC.root");
+  runSample(Ntot_WZ,Nss_WZ, "ChargeMisID_WZ_25ns_Electrons_MVATightRC.root");
+  /*
   float nNormTest = *Ntot_Test * weightTest;
   float nSSNormTest = *Nss_Test * weightTest;
   
   std::cout<<"Number of events passing mass window cut from Test: "<<nNormTest<<std::endl;
   std::cout<<"Number of same-sign events passing mass window cut from Test: "<<nSSNormTest<<std::endl;
-
-  /*
+  */
+  
   //now weight them and print out the values
-  float nNormDY = Ntot_DY * weightDY;
-  float nNormWZ = Ntot_WZ * weightWZ;
-  float nNormWJets = Ntot_WJets * weightWJets;
-  float nNormTT = Ntot_TT * weightTT;
-  float nNormTTZ = Ntot_TTZ * weightTTZ;
+  float nNormDY = *Ntot_DY * weightDY;
+  float nNormWZ = *Ntot_WZ * weightWZ;
+  float nNormTT = *Ntot_TT * weightTT;
 
   //now weight them and print out the values
-  float nSSNormDY = Nss_DY * weightDY;
-  float nSSNormWZ = Nss_WZ * weightWZ;
-  float nSSNormWJets = Nss_WJets * weightWJets;
-  float nSSNormTT = Nss_TT * weightTT;
-  float nSSNormTTZ = Nss_TTZ * weightTTZ;
+  float nSSNormDY = *Nss_DY * weightDY;
+  float nSSNormWZ = *Nss_WZ * weightWZ;
+  float nSSNormTT = *Nss_TT * weightTT;
   
   std::cout<<"Number of events passing mass window cut from DY: "<<nNormDY<<std::endl;
   std::cout<<"Number of events passing mass window cut from WZ: "<<nNormWZ<<std::endl;
-  std::cout<<"Number of events passing mass window cut from WJets: "<<nNormWJets<<std::endl;
   std::cout<<"Number of events passing mass window cut from TT: "<<nNormTT<<std::endl;
-  std::cout<<"Number of events passing mass window cut from TTZ: "<<nNormTTZ<<std::endl;
 
   std::cout<<"Number of same-sign events passing mass window cut from DY: "<<nSSNormDY<<std::endl;
   std::cout<<"Number of same-sign events passing mass window cut from WZ: "<<nSSNormWZ<<std::endl;
-  std::cout<<"Number of same-sign events passing mass window cut from WJets: "<<nSSNormWJets<<std::endl;
   std::cout<<"Number of same-sign events passing mass window cut from TT: "<<nSSNormTT<<std::endl;
-  std::cout<<"Number of same-sign events passing mass window cut from TTZ: "<<nSSNormTTZ<<std::endl;
-*/
+
 
   /*ADD CODE TO PRINT OUT THE TOTAL PURITY YOU WILL HAVE TO DEFINE YOUR OWN VARIABLES AND PRINT THEM OUT. 
    YOU PROBABLY WANT ONE FOR TOTAL EVENTS AND ONE FOR NON DY EVENTS*/
