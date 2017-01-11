@@ -80,9 +80,6 @@ void Ex_1p1(){
   double weightEtaLowPt[NBINS]={0}; //initilizes an array of zeros for 
   double weightEtaLowPtFill[NBINS]; //weights array for you to fill by hand (after running and getting rates from low pt histograms
 
-  //double weightsEtaLowPt[]; //charge misID rates by eta bin for low pt electrons (pt < 100 GeV)
-  //FIXME fill to check and make helper function like EtaWeight in 1p3
-
   TH1F* ssEtaHighPt= new TH1F("ssEtaHighPt","#eta",NBINS, edges); //      (h3)
   TH1F* totEtaHighPt= new TH1F("totEtaHighPt","#eta",NBINS, edges); //     (h2)
   TH1F* weightEtaHighPt= new TH1F("weightEtaHighPt","#eta",NBINS, edges); //  (h1)
