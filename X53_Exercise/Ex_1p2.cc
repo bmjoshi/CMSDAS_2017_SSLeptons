@@ -117,25 +117,10 @@ void Ex_1p2(){
   int* Nss_WZ =new int(0);
   int* Nss_TT =new int(0);
 
-  /*
-  float nRunTest = 200000;
-  float xsecTest = 1.0;
-  float weightTest = (targetlumi*xsecTest) / (nRunTest);
-  int* Ntot_Test=new int(0);
-  int* Nss_Test=new int(0);
-  */
-
   //Now run over the samples and count up the number of (total or same signed) events and change the Ntot and Nss variable appropriately (see definition of runSample at top)
   runSample(Ntot_DY,Nss_DY, "ChargeMisID_DY_25ns_Electrons_MVATightRC.root");
   runSample(Ntot_TT,Nss_TT, "ChargeMisID_TTbar_25ns_MVATightRC.root");
   runSample(Ntot_WZ,Nss_WZ, "ChargeMisID_WZ_25ns_Electrons_MVATightRC.root");
-  /*
-  float nNormTest = *Ntot_Test * weightTest;
-  float nSSNormTest = *Nss_Test * weightTest;
-  
-  std::cout<<"Number of events passing mass window cut from Test: "<<nNormTest<<std::endl;
-  std::cout<<"Number of same-sign events passing mass window cut from Test: "<<nSSNormTest<<std::endl;
-  */
   
   //now weight them and print out the values
   float nNormDY = *Ntot_DY * weightDY;
