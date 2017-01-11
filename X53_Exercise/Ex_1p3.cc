@@ -154,14 +154,11 @@ void Ex_1p3(){
       Usage is simply EtaWeight(weightsarray, eta,pt). Take advantage of it to make life easier :)
      */
 
+    float ee_weight;
+    float emu_weight;
+
     // ADD CODE HERE TO CALCULATE PROBABLITY FOR EACH EVENT
 
-    float ee_weight = EtaWeight(weights, lepEtas1, lepPts1) + EtaWeight(weights, lepEtas2, lepPts2) - EtaWeight(weights, lepEtas1, lepPts1)*EtaWeight(weights, lepEtas2, lepPts2);
-    float emu_weight;
-    if(lepFlavor1 == 0)
-      emu_weight = EtaWeight(weights, lepEtas1, lepPts1); //misId rate for mu is zero
-    else
-      emu_weight = EtaWeight(weights, lepEtas2, lepPts2);
 
     //fill ss HT histogram
     if(ee){
