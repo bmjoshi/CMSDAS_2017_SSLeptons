@@ -189,7 +189,7 @@ public:
     eta  = -100;
     phi  = -100;
 
-    charge = 10.5;
+    charge = 10;
 
     isLoose = -1;
     isTight = -1;
