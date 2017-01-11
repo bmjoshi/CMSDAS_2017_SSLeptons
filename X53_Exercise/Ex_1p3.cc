@@ -115,21 +115,9 @@ void Ex_1p3(){
     t->GetEntry(ient);
     if(ient % 1000 ==0) std::cout<<"Completed "<<ient<<" out of "<<nEntries<<" events"<<std::endl;
 
-    //check met req
-    //if( met < 130) continue; // no met cut
-    Nmetcut +=1;
-
    //require more than one jet
     if(!jetPts2) continue;
     NJetscut +=1;
-
-    //check for high pt jet
-    //if(jetPts1 < 240) continue;
-    NJetpt1cut+=1;
-
-    //check for second jet
-    //if(jetPts2 < 140) continue;
-    NJetpt2cut+=1;
 
     if( HT < 900) continue;
     NHTcut+=1;
@@ -163,7 +151,7 @@ void Ex_1p3(){
 
     /*now we want to fill our predicted HT distribution with the os events weighted by the appropriate weights
       I've written a simple function that gives the correct element of the weight array if you pass it the eta of the electron.
-      Usage is simply EtaWeight(weightsarray, eta). Take advantage or it to make life easier :)
+      Usage is simply EtaWeight(weightsarray, eta,pt). Take advantage of it to make life easier :)
      */
 
     // ADD CODE HERE TO CALCULATE PROBABLITY FOR EACH EVENT
@@ -189,10 +177,7 @@ void Ex_1p3(){
     //end event loop
   }
 
-  //printf("Num of events passing met cut         : %d\n", Nmetcut);
   printf("Num of events passing Njet cut         : %d\n", NJetscut);
-  //printf("Num of events passing jet1pt cut      : %d\n", NJetpt1cut);
-  //printf("Num of events passing jet2pt cut      : %d\n", NJetpt2cut);
   printf("Num of events passing lep1pt cut      : %d\n", NlepPt1cut);
   printf("Num of events passing lep2pt cut      : %d\n", NlepPt2cut);
   printf("Num of events passing HT cut          : %d\n", NHTcut);

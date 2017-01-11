@@ -34,7 +34,8 @@ void Ex_1p1(){
 
   //load file and tree
   TChain* t = new TChain("ChargeMisID");
-  t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_Data_All_2016_B-H_Electrons_MVATightRC.root");
+  //t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_DY_25ns_Electrons_MVATightRC.root"); //Drell Yan
+  t->Add("/eos/uscms/store/user/cmsdas/2017/long_exercises/Same-Sign-Dileptons/ChargeMisID_Data_All_2016_B-H_Electrons_MVATightRC.root"); //data
   
   int nEntries = t->GetEntries();
 
@@ -92,7 +93,7 @@ void Ex_1p1(){
     if(ient % 1000 ==0) std::cout<<"Completed "<<ient<<" out of "<<nEntries<<" events"<<std::endl;
 
     // THE LINES BELOW DETERMINES THE QUALITY OF THE ELECTRONS // All electrons in sample are at least Loose electrons, the tight flag can be used to select only events with two (or at least one) tight electron
-    //if ((elTight1 != true) || (elTight2 != true))) continue; //only consider events with two tight electrons
+    if ((elTight1 != true) || (elTight2 != true)) continue; //only consider events with two tight electrons
 
     // Fill histogram only if in same eta bin 
     // we do this so that we meassure the charge misID rate of a single lepton with respect to eta
@@ -112,6 +113,7 @@ void Ex_1p1(){
     totPtHist->Fill(v2.Pt());
 
     if (elPts1 <100 && elPts2 < 100) // low pt range
+    //if (elPts1 >100 && elPts2 > 100) // high pt range
       totEtaLowPt->Fill(elEtas1); // fill just once indicating one event with both leptons in same eta bin
 
     if (elCharge1 == elCharge2 ){
@@ -177,16 +179,17 @@ void Ex_1p1(){
   std::cout<<"pair charge mis ID rate: "<< ssmass->Integral() /  allmass->Integral()<<std::endl;
 
 
+  TGraphAsymmErrors* etaGraph = new TGraphAsymmErrors(ssEtaHist,totEtaHist);
   //tcanvas for eta plot
   TCanvas c4;
-
+  etaGraph->Draw("apl");
   //add code!
-
   c4.Print("chargeMisID_vEta.pdf");
 
+  TGraphAsymmErrors* ptGraph = new TGraphAsymmErrors(ssPtHist,totPtHist);
   //same as above but for pt
   TCanvas c5;
-
+  ptGraph->Draw("apl");
   c5.Print("chargeMisID_vPt.pdf");
 
 }
