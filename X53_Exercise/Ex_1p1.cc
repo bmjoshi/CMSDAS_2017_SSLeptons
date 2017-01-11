@@ -93,7 +93,7 @@ void Ex_1p1(){
     if(ient % 1000 ==0) std::cout<<"Completed "<<ient<<" out of "<<nEntries<<" events"<<std::endl;
 
     // THE LINES BELOW DETERMINES THE QUALITY OF THE ELECTRONS // All electrons in sample are at least Loose electrons, the tight flag can be used to select only events with two (or at least one) tight electron
-    if ((elTight1 != true) || (elTight2 != true)) continue; //only consider events with two tight electrons
+    //if ((elTight1 != true) || (elTight2 != true)) continue; //only consider events with two tight electrons
 
     // Fill histogram only if in same eta bin 
     // we do this so that we meassure the charge misID rate of a single lepton with respect to eta
@@ -151,16 +151,10 @@ void Ex_1p1(){
   c3.Print("DiElectronInvariantMass_ss.pdf");  
 
 
-  //ADD CODE TO PRINT OUT CHARGE MISID RATE
+  //CODE TO PRINT OUT CHARGE MISID RATE
   //Determine the charge misID rate with respect to abs(Eta) and Pt  
   // Bin abs(Eta) according to the bins given in getEtaBin (these are the bins used in the actual analysis)
   // and bin pt in a low pt (<100 GeV) bin and a high (>100GeV) bin
-  // You will be asked for 12 rates 
-
-  /* ADD CODE HERE TO MAKE PLOTS OF THE CHARGE MISID RATE VS PT, ETA. SOME OF IT IS THERE SO THAT WE ALL HAVE THE SAME OUTPUT FILES
-     HINT1: MAKE USE OF TGRAPHASYMMERRORS, 
-     HINT2: SET YOUR VS ETA BINS ACCORDING TO THE getEtaBin METHOD PROVIDED AT THE BOTTOM OF THIS FILE
-   */
 
   //single lepton charge mis ID rate for low pt (<100 GeV)
   std::cout<<"weightEtaLowPt {";
@@ -176,20 +170,20 @@ void Ex_1p1(){
   }
   std::cout<<"}"<<std::endl;
 
-  std::cout<<"pair charge mis ID rate: "<< ssmass->Integral() /  allmass->Integral()<<std::endl;
+  //std::cout<<"pair charge mis ID rate: "<< ssmass->Integral() /  allmass->Integral()<<std::endl;
 
+  /* ADD CODE HERE TO MAKE PLOTS OF THE CHARGE MISID RATE VS PT, ETA. SOME OF IT IS THERE SO THAT WE ALL HAVE THE SAME OUTPUT FILES
+     HINT1: MAKE USE OF TGRAPHASYMMERRORS, 
+     HINT2: SET YOUR VS ETA BINS ACCORDING TO THE getEtaBin METHOD PROVIDED AT THE BOTTOM OF THIS FILE
+   */
 
-  TGraphAsymmErrors* etaGraph = new TGraphAsymmErrors(ssEtaHist,totEtaHist);
   //tcanvas for eta plot
   TCanvas c4;
-  etaGraph->Draw("apl");
-  //add code!
+  //ADD CODE!
   c4.Print("chargeMisID_vEta.pdf");
 
-  TGraphAsymmErrors* ptGraph = new TGraphAsymmErrors(ssPtHist,totPtHist);
   //same as above but for pt
   TCanvas c5;
-  ptGraph->Draw("apl");
   c5.Print("chargeMisID_vPt.pdf");
 
 }
