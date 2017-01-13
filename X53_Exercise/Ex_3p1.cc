@@ -158,10 +158,15 @@ void Ex_3p1(){
   hsHT->Add(data_bkgnd_cm_HT_h);
   hsHT->Add(data_bkgnd_np_HT_h);
 
+  //Also add the same histos to h_err - so they have the same bin contents for plotting the error
+  h_err->Add(TTX_HT_h); //Added the combine TT+X channel to stack
+  h_err->Add(data_bkgnd_cm_HT_h);
+  h_err->Add(data_bkgnd_np_HT_h);
+
   //Add errors for stack histo (add in quad)
   std::vector<float> errs;
-  float sysErrorNP =0.5;  // * REPLACE WITH VALUE THAT REFLECT WHAT YOU THINK THE CHARGEMISID SYSTEMATIC ERROR SHOULD BE SET TO 
-  float sysErrorCM =0.5; // * REPLACE WITH VALUE THAT REFLECT WHAT YOU THINK THE CHARGEMISID SYSTEMATIC ERROR SHOULD BE SET TO 
+  float sysErrorNP =0.0;  // * REPLACE WITH VALUE THAT REFLECT WHAT YOU THINK THE CHARGEMISID SYSTEMATIC ERROR SHOULD BE SET TO 
+  float sysErrorCM =0.0; // * REPLACE WITH VALUE THAT REFLECT WHAT YOU THINK THE CHARGEMISID SYSTEMATIC ERROR SHOULD BE SET TO 
   for(unsigned int ibin=1; ibin<= data_bkgnd_np_HT_h->GetNbinsX(); ibin++){
     //nonprompt
     float etemp = pow(data_bkgnd_np_HT_h->GetBinError(ibin),2 ); //stat
@@ -175,12 +180,15 @@ void Ex_3p1(){
     errs.push_back(etemp);
   }
 
-  // * PLOT THE ERROR BELOW *
 
 
   TCanvas c1;
   //c1.SetLogy();
   hsHT->Draw("hist");
+  // * PLOT THE ERROR BELOW *
+  h_err->SetFillStyle(3344);
+  h_err->SetFillColor(1);
+  h_err->Draw("SAME E2");
   data_HT_h->Draw("pe SAME");
   //UNCOMMENT THESE LINES TO PLOT THE SIGNAL MONTE CARLO
   //mc_X53L_HT_h->Draw("SAME");
@@ -198,6 +206,7 @@ void Ex_3p1(){
   leg->AddEntry(data_bkgnd_np_HT_h,"Non-prompt","f");
   leg->AddEntry(data_bkgnd_cm_HT_h,"ChargeMisID","f");
   leg->AddEntry(TTX_HT_h,"TT+X","f");
+  leg->AddEntry(h_err,"Bckgnd Error","f");
   //leg->AddEntry(TTZ_HT_h,"TT+Z","f");
   leg->AddEntry(mc_X53L_HT_h,"X53-L-M1000 MC","l");
   leg->AddEntry(mc_X53R_HT_h,"X53-R-M1000 MC","l");
